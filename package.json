@@ -14,9 +14,11 @@
     "@react-three/fiber": "^9.2.0",
     "@react-three/rapier": "^2.1.0",
     "@types/three": "^0.178.1",
+    "@vanillaes/csv": "^3.0.4",
     "prettier": "^3.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
     "three": "^0.178.0"
   },
   "devDependencies": {
