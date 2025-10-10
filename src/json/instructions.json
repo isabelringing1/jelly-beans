@@ -1,0 +1,117 @@
+{
+  "start": {
+    "cards": [
+      {
+        "title": "The Jelly Bean Interpretation",
+        "subtitle": "An interactive exploration about candy and the rest of your life.",
+        "button": "START"
+      },
+      {
+        "texts": [
+          "Hey there. Have you ever wondered how much time you have left to live?"
+        ]
+      },
+      {
+        "texts": ["Sorry. That probably freaked you out."]
+      },
+      {
+        "texts": [
+          "Let me start over...",
+          "Hi, I'm Isabel. Lately, I've been thinking about how much time I have left to live.",
+          "Maybe you have too."
+        ]
+      },
+      {
+        "texts": [
+          "Of course, it's impossible to know for sure.",
+          "But even if you did have a number, would you be able to wrap your head around it?"
+        ]
+      },
+      {
+        "texts": [
+          "In this interactive exploration, we’ll visualize the **rest of your life** using a more tangible unit of measurement: Jelly Beans."
+        ]
+      },
+      {
+        "id": "birth-date",
+        "texts": ["To start, please enter your birth date."],
+        "input": "date",
+        "button": "CONFIRM"
+      },
+      {
+        "id": "gender",
+        "texts": ["What is your gender?"],
+        "input": "dropdown",
+        "options": ["Male", "Female", "Other", "Prefer not to say"],
+        "button": "CONFIRM",
+        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to play!"
+      },
+      {
+        "id": "race",
+        "texts": ["What is your race?"],
+        "input": "dropdown",
+        "options": [
+          "Hispanic",
+          "American Indian or Alaskan Native",
+          "Asian",
+          "Black",
+          "White",
+          "Other",
+          "Prefer not to say"
+        ],
+        "button": "Confirm",
+        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to play!"
+      },
+      {
+        "hidden": true
+      },
+      {
+        "texts": ["Great."],
+        "top": true
+      },
+      {
+        "texts": [
+          "Now, imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
+        ],
+        "top": true
+      },
+      {
+        "id": "pre-reveal",
+        "texts": ["What would that look like?"],
+        "button": "SHOW ME",
+        "top": true
+      },
+      {
+        "hidden": true
+      },
+      {
+        "texts": ["Hey, that's not bad."],
+        "top": true
+      },
+      {
+        "texts": ["Let's play a guessing game, just for fun..."],
+        "top": true
+      },
+      {
+        "texts": ["How many jelly beans do you think are in this jar?"],
+        "input": "number",
+        "button": "GUESS",
+        "top": true
+      },
+      {
+        "texts": [
+          "While it may be daunting to see your life like this, I think it's helpful to remember that **you're in charge of how you spend your days**."
+        ],
+        "top": true
+      },
+      {
+        "id": "show-categories",
+        "texts": [
+          "With that in mind, let's explore how your life breaks down:"
+        ],
+        "button": "START",
+        "top": true
+      }
+    ]
+  }
+}

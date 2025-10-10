@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
 
 import TextCard from "./TextCard.jsx";
-import instructions from "./instructions.json";
+import instructions from "./json/instructions.json";
 import { getDaysLeft } from "./util/TimeCalculator.js";
 
 const TextContainer = (props) => {
-  const { userParams, setUserParams } = props;
+  const { userParams, setUserParams, setShowCategories } = props;
   const [currentSequence, setCurrentSequence] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [days, setDays] = useState(0);
-  const [hide, setHide] = useState(false);
 
   useEffect(() => {
     var sequence = instructions["start"];
@@ -36,23 +35,24 @@ const TextContainer = (props) => {
       var d = getDaysLeft(userParams);
       console.log("calculated days: " + d);
       setDays(d);
-      hideCards();
+      nextCard(); // will be empty
       setTimeout(() => {
-        showCards();
-        nextCard();
-      }, 1000);
+        setCurrentCardIndex(currentCardIndex + 2); //so hacky
+      }, 2500);
       return;
     }
     if (card.id == "pre-reveal") {
       document.dispatchEvent(
         new CustomEvent("show-jelly-beans", { detail: { days: days } })
       );
-      hideCards();
+      nextCard(); // will be empty
       setTimeout(() => {
-        showCards();
-        nextCard();
-      }, 2800);
+        setCurrentCardIndex(currentCardIndex + 2); //so hacky
+      }, 6000);
       return;
+    }
+    if (card.id == "show-categories") {
+      setShowCategories(true);
     }
     nextCard();
   };
@@ -61,23 +61,19 @@ const TextContainer = (props) => {
     setCurrentCardIndex(currentCardIndex + 1);
   };
 
-  const hideCards = () => {
-    setHide(true);
-  };
-
-  const showCards = () => {
-    setHide(false);
-  };
-
   return (
-    <div id="text-container" onClick={onTextContainerClicked}>
+    <div
+      id="text-container"
+      onClick={onTextContainerClicked}
+      style={{ top: -100 * currentCardIndex + "vh" }}
+    >
       {currentSequence &&
         currentSequence.cards.map((card, i) => {
           return (
             <TextCard
               card={card}
               onButtonClicked={onButtonClicked}
-              isCurrent={i == currentCardIndex && !hide}
+              index={i}
               key={"card-" + i}
               id={"card-" + i}
               userParams={userParams}

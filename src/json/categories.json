@@ -1,0 +1,63 @@
+{
+  "column-1": [
+    {
+      "id": "sleep",
+      "title": "Sleep 🌙",
+      "text": "How many hours a night do you usually sleep?",
+      "daily": true
+    },
+    {
+      "id": "screen",
+      "title": "Screen Time 🖥️",
+      "text": "How many hours a week do you usually spend on your devices?",
+      "hint": "Hint: Check your screen time reports!",
+      "weekly": true
+    },
+    {
+      "id": "commute",
+      "title": "Commute 🚌",
+      "text": "How many hours a week do you spend commuting?",
+      "weekly": true
+    },
+    {
+      "id": "work",
+      "title": "Work 👔",
+      "text": "How many hours a week do you spend working?",
+      "weekly": true
+    },
+    {
+      "id": "eat",
+      "title": "Eat 🍽️",
+      "text": "How many hours a week do you spend eating?",
+      "weekly": true
+    }
+  ],
+  "column-3": [
+    {
+      "id": "exercise",
+      "title": "Exercise 🏋️",
+      "text": "How many hours a week do you spend exercising?",
+      "weekly": true
+    },
+    {
+      "id": "hobbies",
+      "title": "Hobbies 🎨",
+      "text": "How many hours a week do you spend on your hobbies?",
+      "weekly": true
+    },
+    {
+      "id": "tv",
+      "title": "TV 📺",
+      "text": "How many hours a week do you spend watching TV?",
+      "weekly": true
+    },
+    {
+      "id": "diy",
+      "title": "Wildcard 🃏",
+      "text": "How many hours a week do you spend ____ ?",
+      "hint": "Make your own!",
+      "inline-input": true,
+      "weekly": true
+    }
+  ]
+}

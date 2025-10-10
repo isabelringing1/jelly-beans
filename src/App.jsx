@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import TextContainer from "./TextContainer.jsx";
+import Categories from "./Categories.jsx";
 import { initializeLifeTables } from "./util/TimeCalculator.js";
 
 const App = () => {
   const [userParams, setUserParams] = useState({});
+  const [showCategories, setShowCategories] = useState(false);
 
   useEffect(() => {
     fetch("/public/life_tables.csv")
@@ -15,7 +17,12 @@ const App = () => {
 
   return (
     <div id="content">
-      <TextContainer userParams={userParams} setUserParams={setUserParams} />
+      <TextContainer
+        userParams={userParams}
+        setUserParams={setUserParams}
+        setShowCategories={setShowCategories}
+      />
+      <Categories show={showCategories} />
     </div>
   );
 };

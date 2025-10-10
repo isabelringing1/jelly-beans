@@ -5,19 +5,21 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import {
-  setupParticles,
-  renderFunction,
-  setParticleCount,
-} from "./jelly_beans.js";
-
+import { JellyBeanGroup } from "./JellyBeanGroup.js";
 import WebGPU from "three/addons/capabilities/WebGPU.js";
+import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
+
+import containersJson from "./json/containers.json";
 
 let renderer, scene, camera, controls, jarModel;
-
+var groups = {};
 const maxParticles = 23750;
+const containers = containersJson["containers"];
+const positions = containersJson["positions"];
 
 var jellyBeansSetUp = false;
+var totalJellyBeans = 0;
+var totalJellyBeansLeft = 0;
 
 if (WebGPU.isAvailable() === false) {
   document.body.appendChild(WebGPU.getErrorMessage());
@@ -36,6 +38,8 @@ async function init() {
   renderer = new THREE.WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   //renderer.toneMapping = THREE.ACESFilmicToneMapping;
   //srenderer.toneMappingExposure = 1.2;
   document.body.appendChild(renderer.domElement);
@@ -53,26 +57,34 @@ async function init() {
   const rgbeLoader = new RGBELoader().setPath("");
 
   const hdrTexture = await rgbeLoader.loadAsync(
-    "kloppenheim_06_puresky_4k.hdr"
+    "public/kloppenheim_06_puresky_4k.hdr"
   );
   hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
-  scene.background = hdrTexture;
+  scene.background = new THREE.Color("rgba(175, 243, 255, 1)");
+
   scene.backgroundBlurriness = 0.5;
   scene.environment = hdrTexture;
+  //scene.environmentIntensity = 1;
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xeeeeee, 0.6);
-  scene.add(hemiLight);
+  /*const planeGeometry = new THREE.PlaneGeometry(3, 3);
+  const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xaff3ff });
+  const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+  plane.rotateX(-1.57);
+  plane.position.y -= 0.16;
+  plane.receiveShadow = true;
+  scene.add(plane);*/
 
-  await setupJar();
+  var c = await setUpContainer(containers["jar"], [0, -0.17, 0]);
+  //setUpTest();
 
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-  directionalLight.position.y = 7;
-  directionalLight.position.z = 0;
-  directionalLight.target = jarModel;
+  const light = new THREE.PointLight(0xffffff, 500);
+  light.castShadow = true;
+  light.shadow.camera.near = 0.01;
+  light.shadow.camera.far = 10;
+  light.shadow.mapSize = new THREE.Vector2(2000, 2000);
+  light.position.set(5, 5.4, 5);
 
-  const light = new THREE.AmbientLight(0x404040, 25); // soft white light
   scene.add(light);
-  scene.add(directionalLight);
 
   setupInputs();
 
@@ -92,9 +104,14 @@ async function init() {
 
   document.addEventListener("answered-questions", onQuestionsAnswered);
   document.addEventListener("show-jelly-beans", (e) => {
-    console.log(e);
     showJellyBeans(e.detail.days);
+    totalJellyBeans = e.detail.days;
+    totalJellyBeansLeft = e.detail.days;
+    setTimeout(() => {
+      controls.autoRotate = true;
+    }, 6000);
   });
+  document.addEventListener("category-set", onCategorySet);
 }
 
 function animateCameraZoom() {
@@ -115,61 +132,172 @@ function onQuestionsAnswered() {
   animateCameraZoom();
 }
 
-function showJellyBeans(amount = -1) {
+function showJellyBeans(
+  index = 0,
+  amount = -1,
+  container = {},
+  pos = [0, 0, 0]
+) {
   if (amount != -1) {
     params.particleCount = amount;
   }
   setTimeout(() => {
-    setupParticles(scene, params, gui);
+    var gridSize = null;
+    var group = new JellyBeanGroup(
+      scene,
+      params,
+      container,
+      pos,
+      index,
+      gridSize
+    );
+    groups[index] = group;
     gui
-      .add(params, "particleCount", 4096, maxParticles, 10)
+      .add(params, "particleCount", 100, maxParticles, 10)
       .onChange((value) => {
-        setParticleCount(value);
+        group.setParticleCount(value);
       });
     jellyBeansSetUp = true;
+    controls.autoRotate = false;
+    group.setParticleCount(params.particleCount);
     setTimeout(() => {
       //paused = true;
     }, 3500);
   }, 1000);
 }
 
-async function setupJar() {
-  const loader = new GLTFLoader();
+const loader = new GLTFLoader();
+const glassMat = new THREE.MeshPhysicalMaterial({
+  color: 0xffffff,
+  metalness: 0,
+  roughness: 0,
+  ior: 1.2,
+  //envMap: hdrEquirect,
+  //envMapIntensity: 1,
+  transmission: 1, // use material.transmission for glass materials
+  specularIntensity: 1,
+  specularColor: 0xffffff,
+  opacity: 1,
+  side: THREE.DoubleSide,
+  transparent: true,
+});
 
+async function setUpContainer(c, p = [0, 0, 0]) {
+  console.log("Setting up " + c.id + " at " + p);
   return new Promise((resolve, reject) => {
-    loader.load("/jar2.glb", async function (gltf) {
-      jarModel = gltf.scene;
-      jarModel.scale.set(4.8, 3, 4.8);
-      jarModel.position.set(0, -0.17, 0);
-      scene.add(jarModel);
-      resolve(gltf);
+    loader.load("public/" + c.file, async function (gltf) {
+      var model = gltf.scene;
+      model.scale.set(c.scale[0], c.scale[1], c.scale[2]);
+      model.position.set(p[0], p[1], p[2]);
+      model.material = glassMat;
+      model.castShadow = true;
+      model.receiveShadow = true;
+      model.traverse((o) => {
+        if (o.isMesh) {
+          o.material = glassMat;
+          o.castShadow = true;
+          o.receiveShadow = true;
+        }
+      });
+      scene.add(model);
+      resolve(model);
     });
   });
+}
+
+function getContainer(amt) {
+  var potential = [];
+  var keys = Object.keys(containers);
+  for (var i = 0; i < keys.length; i++) {
+    var id = keys[i];
+    if (containers[id].max >= amt && containers[id].min <= amt) {
+      potential.push(containers[id]);
+    }
+  }
+  return potential[Math.floor(Math.random() * potential.length)];
+}
+
+function getRandomPosition() {
+  var index = Math.floor(Math.random() * positions.length);
+  var position = positions[index];
+  positions.splice(index, 1);
+  console.log(position, positions);
+  return position;
+}
+
+function setUpTest() {
+  const threeTone = new THREE.TextureLoader().load("/public/threeTone.jpg");
+  threeTone.minFilter = THREE.NearestFilter;
+  threeTone.magFilter = THREE.NearestFilter;
+  var meshMaterial = new THREE.MeshToonMaterial({
+    color: 0xffffff,
+    map: threeTone,
+    side: THREE.FrontSide,
+  });
+
+  var capsule = new THREE.CapsuleGeometry(0.005, 0.005, 4, 8);
+  var geometry = BufferGeometryUtils.mergeVertices(capsule);
+
+  geometry.rotateX(3.14 / 2);
+  var particleMesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial());
+  scene.add(particleMesh);
+}
+
+function onCategorySet(e) {
+  console.log(totalJellyBeans, e.detail.percent);
+  var subamount = Math.round(totalJellyBeans * e.detail.percent);
+  var editedCategory = e.detail.index in groups;
+
+  var amountToSubtractFromTotal = subamount;
+  if (editedCategory) {
+    amountToSubtractFromTotal =
+      subamount - groups[e.detail.index].getParticleCount();
+  }
+
+  if (totalJellyBeansLeft - amountToSubtractFromTotal >= 0) {
+    totalJellyBeansLeft -= amountToSubtractFromTotal;
+  } else {
+    document.dispatchEvent(new Event("overboard", { bubbles: true }));
+    return;
+  }
+
+  console.log(
+    "cat " +
+      e.detail.index +
+      " is " +
+      e.detail.percent * 100 +
+      " % for total of " +
+      subamount +
+      " and total left is " +
+      totalJellyBeansLeft
+  );
+
+  if (editedCategory) {
+    groups[e.detail.index].setParticleCount(subamount);
+  } else {
+    var c = getContainer(subamount);
+    var p = getRandomPosition();
+    setUpContainer(c, p);
+    console.log(c);
+    showJellyBeans(e.detail.index, subamount, c, p);
+  }
+  groups[0].setParticleCount(totalJellyBeansLeft);
 }
 
 var paused = false;
 function setupInputs() {
   const onKeyDown = (e) => {
-    console.log(e);
     if (e.key == "s") {
-      document.getElementById("content").style.display = "none";
+      document.getElementById("text-container").style.display = "none";
+      document.getElementById("categories").style.opacity = 1;
       animateCameraZoom();
-      showJellyBeans();
+      totalJellyBeans = params.particleCount;
+      totalJellyBeansLeft = params.particleCount;
+      showJellyBeans(0, -1, containers["jar"]);
       controls.enableZoom = true;
       controls.enablePan = true;
     }
-
     //paused = !paused;
-    /*var oldCount = particleCountUniform.value;
-        console.log(oldCount)
-        setParticleCount(0);
-        var curr = 0;
-        setInterval(() => {
-            if (curr < oldCount) {
-                curr = Math.min(curr + 800, oldCount);
-                setParticleCount(curr)
-            }
-        }, 10);*/
   };
 
   document.addEventListener("keydown", onKeyDown);
@@ -190,7 +318,9 @@ async function render() {
     await renderer.renderAsync(scene, camera);
     return;
   }
-  renderFunction(renderer, paused);
+  for (const index of Object.keys(groups)) {
+    await groups[index].renderFunction(renderer, paused);
+  }
 
   await renderer.renderAsync(scene, camera);
 }

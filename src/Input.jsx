@@ -15,6 +15,7 @@ const Input = (props) => {
   var dayRef = useRef(null);
   var yearRef = useRef(null);
   var dropdownRef = useRef(null);
+  var numberRef = useRef(null);
 
   useEffect(() => {
     var newUserParams = { ...userParams };
@@ -55,9 +56,7 @@ const Input = (props) => {
   };
 
   const getInputError = () => {
-    if (isInputValid()) {
-      return " ";
-    } else if (type == "date") {
+    if (type == "date") {
       return "Not a valid date.";
     }
     return "Not a valid input.";
@@ -141,7 +140,17 @@ const Input = (props) => {
         </div>
       )}
 
-      <div id="input-error">{getInputError()}</div>
+      {type == "number" && (
+        <input
+          id="number-input"
+          className="input"
+          type="number"
+          onChange={onInputChange}
+          ref={numberRef}
+        />
+      )}
+
+      {!isInputValid() && <div id="input-error">{getInputError()}</div>}
 
       {button && (
         <div id="button-container">
