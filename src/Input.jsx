@@ -9,6 +9,7 @@ const Input = (props) => {
     setUserParams,
     onButtonClicked,
     button,
+    long,
   } = props;
 
   var monthRef = useRef(null);
@@ -50,6 +51,9 @@ const Input = (props) => {
     }
     if (id == "race") {
       newUserParams["race"] = dropdownRef.current;
+    }
+    if (id == "guess") {
+      newUserParams["guess"] = numberRef.current.value;
     }
 
     setUserParams(newUserParams);
@@ -143,7 +147,7 @@ const Input = (props) => {
       {type == "number" && (
         <input
           id="number-input"
-          className="input"
+          className={"input" + (long ? " longer" : "")}
           type="number"
           onChange={onInputChange}
           ref={numberRef}

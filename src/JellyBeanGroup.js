@@ -79,7 +79,7 @@ class JellyBeanGroup {
     this.gridSizeUniform = TSL.uniform(this.gridSize);
     this.particleCountUniform = TSL.uniform(params.particleCount, "uint");
     this.stiffnessUniform = TSL.uniform(1000);
-    this.restDensityUniform = TSL.uniform(1);
+    this.restDensityUniform = TSL.uniform(1); // look here
     this.dynamicViscosityUniform = TSL.uniform(5);
     this.dtUniform = TSL.uniform(1 / 60);
     this.gravityUniform = TSL.uniform(
@@ -87,13 +87,13 @@ class JellyBeanGroup {
     );
     this.fallIndexUniform = TSL.uniform(-1);
     this.xOffsetUniform = TSL.uniform(pos[0]);
-    console.log(container);
     this.yOffsetUniformPc = TSL.uniform(pos[1]);
     this.yOffsetUniform = TSL.uniform(container.yOffset);
     this.zOffsetUniform = TSL.uniform(pos[2] - 0.02);
 
     this.innerRadiusUniform = TSL.uniform(container.radius);
     this.subtractionUniform = TSL.uniform(container.subtract);
+    this.bounceUniform = TSL.uniform(container.bounce);
   }
 
   setupComputeShaders(params) {
@@ -395,7 +395,7 @@ class JellyBeanGroup {
       const ppLen = pp.length().toVar();
       const dist = ppLen.sub(radius);
       TSL.If(dist.greaterThan(0.0), () => {
-        result.subAssign(pp.normalize().mul(dist).mul(1.5)); //how much jelly beans bounce
+        result.subAssign(pp.normalize().mul(dist).mul(this.bounceUniform)); //how much jelly beans bounce
       });
       result.addAssign(0.5);
       return result;
@@ -600,7 +600,6 @@ class JellyBeanGroup {
     scene.add(this.particleMesh);
 
     const onKeyDown = (e) => {
-      console.log(e);
       if (e.key == " ") {
         //this.particleMesh.position.y += 100;
       }

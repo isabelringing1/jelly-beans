@@ -161,6 +161,10 @@ p {
   width: 8vh;
 }
 
+.longer {
+  width: 15vh;
+}
+
 #input-error {
   color: red;
   text-align: center;
@@ -190,6 +194,23 @@ input[type="number"] {
   min-width: 16vh;
   border-radius: 3px;
   text-align: center;
+}
+
+.prompt-select-input {
+  height: 3vh;
+  min-width: auto;
+  color: rgb(46, 46, 46);
+}
+
+.prompt-option {
+  text-align: center;
+}
+
+.prompt-inline-input {
+  height: 3vh;
+  min-width: 8vh !important;
+  text-align: center !important;
+  color: rgb(46, 46, 46);
 }
 
 #dropdown-container {
@@ -381,4 +402,16 @@ input[type="number"] {
   color: red;
   font-size: 1.4vh;
   padding-top: 1vh;
+}
+
+.reset-button {
+  bottom: 1.7vh;
+  position: absolute;
+  right: 12.5vh;
+  color: rgba(255, 0, 0, 0.7);
+  height: 4vh;
+}
+
+.reset-button:hover {
+  color: rgba(255, 0, 0, 0.9);
 }

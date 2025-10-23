@@ -12,7 +12,8 @@ import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js"
 import containersJson from "./json/containers.json";
 
 let renderer, scene, camera, controls, jarModel;
-var groups = {};
+var jellyBeanSims = {};
+var containerModels = {};
 const maxParticles = 23750;
 const containers = containersJson["containers"];
 const positions = containersJson["positions"];
@@ -66,23 +67,25 @@ async function init() {
   scene.environment = hdrTexture;
   //scene.environmentIntensity = 1;
 
-  /*const planeGeometry = new THREE.PlaneGeometry(3, 3);
-  const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xaff3ff });
+  const planeGeometry = new THREE.PlaneGeometry(15, 15);
+  const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.2 });
   const plane = new THREE.Mesh(planeGeometry, planeMaterial);
   plane.rotateX(-1.57);
   plane.position.y -= 0.16;
   plane.receiveShadow = true;
-  scene.add(plane);*/
+  scene.add(plane);
 
-  var c = await setUpContainer(containers["jar"], [0, -0.17, 0]);
+  var jarModel = await setUpContainer(containers["jar"], [0, -0.17, 0]);
+  containerModels[0] = jarModel;
   //setUpTest();
 
-  const light = new THREE.PointLight(0xffffff, 500);
+  const light = new THREE.PointLight(0xffffff, 300);
   light.castShadow = true;
   light.shadow.camera.near = 0.01;
   light.shadow.camera.far = 10;
   light.shadow.mapSize = new THREE.Vector2(2000, 2000);
-  light.position.set(5, 5.4, 5);
+  light.shadow.bias = 0.0001;
+  light.position.set(2, 5.4, 0);
 
   scene.add(light);
 
@@ -104,7 +107,7 @@ async function init() {
 
   document.addEventListener("answered-questions", onQuestionsAnswered);
   document.addEventListener("show-jelly-beans", (e) => {
-    showJellyBeans(e.detail.days);
+    showJellyBeans(0, e.detail.days, containers["jar"]);
     totalJellyBeans = e.detail.days;
     totalJellyBeansLeft = e.detail.days;
     setTimeout(() => {
@@ -112,6 +115,9 @@ async function init() {
     }, 6000);
   });
   document.addEventListener("category-set", onCategorySet);
+  document.addEventListener("reset-category", onResetCategory);
+  document.addEventListener("highlight-category", onHighlightCategory);
+  document.addEventListener("unhighlight-category", onUnhighlightCategory);
 }
 
 function animateCameraZoom() {
@@ -151,7 +157,7 @@ function showJellyBeans(
       index,
       gridSize
     );
-    groups[index] = group;
+    jellyBeanSims[index] = group;
     gui
       .add(params, "particleCount", 100, maxParticles, 10)
       .onChange((value) => {
@@ -169,14 +175,29 @@ function showJellyBeans(
 const loader = new GLTFLoader();
 const glassMat = new THREE.MeshPhysicalMaterial({
   color: 0xffffff,
-  metalness: 0,
-  roughness: 0,
-  ior: 1.2,
+  metalness: 0.04,
+  roughness: 0.08,
+  ior: 1.25,
   //envMap: hdrEquirect,
   //envMapIntensity: 1,
   transmission: 1, // use material.transmission for glass materials
   specularIntensity: 1,
   specularColor: 0xffffff,
+  opacity: 1,
+  side: THREE.DoubleSide,
+  transparent: true,
+});
+
+const highlightMat = new THREE.MeshPhysicalMaterial({
+  color: 0xffedab,
+  metalness: 0.04,
+  roughness: 0.08,
+  ior: 1.25,
+  //envMap: hdrEquirect,
+  //envMapIntensity: 1,
+  transmission: 1, // use material.transmission for glass materials
+  specularIntensity: 1,
+  specularColor: 0xffedab,
   opacity: 1,
   side: THREE.DoubleSide,
   transparent: true,
@@ -189,7 +210,6 @@ async function setUpContainer(c, p = [0, 0, 0]) {
       var model = gltf.scene;
       model.scale.set(c.scale[0], c.scale[1], c.scale[2]);
       model.position.set(p[0], p[1], p[2]);
-      model.material = glassMat;
       model.castShadow = true;
       model.receiveShadow = true;
       model.traverse((o) => {
@@ -243,15 +263,15 @@ function setUpTest() {
   scene.add(particleMesh);
 }
 
-function onCategorySet(e) {
+async function onCategorySet(e) {
   console.log(totalJellyBeans, e.detail.percent);
   var subamount = Math.round(totalJellyBeans * e.detail.percent);
-  var editedCategory = e.detail.index in groups;
+  var editedCategory = e.detail.index in jellyBeanSims;
 
   var amountToSubtractFromTotal = subamount;
   if (editedCategory) {
     amountToSubtractFromTotal =
-      subamount - groups[e.detail.index].getParticleCount();
+      subamount - jellyBeanSims[e.detail.index].getParticleCount();
   }
 
   if (totalJellyBeansLeft - amountToSubtractFromTotal >= 0) {
@@ -273,15 +293,56 @@ function onCategorySet(e) {
   );
 
   if (editedCategory) {
-    groups[e.detail.index].setParticleCount(subamount);
+    jellyBeanSims[e.detail.index].setParticleCount(subamount);
   } else {
     var c = getContainer(subamount);
     var p = getRandomPosition();
-    setUpContainer(c, p);
+    var model = await setUpContainer(c, p);
+    containerModels[e.detail.index] = model;
+
     console.log(c);
     showJellyBeans(e.detail.index, subamount, c, p);
   }
-  groups[0].setParticleCount(totalJellyBeansLeft);
+  jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
+}
+
+function onResetCategory(e) {
+  console.log("resetting category " + e.detail.index);
+
+  var model = containerModels[e.detail.index];
+  var jellyBeanSim = jellyBeanSims[e.detail.index];
+  var amount = jellyBeanSim.getParticleCount();
+  scene.remove(model);
+  scene.remove(jellyBeanSim.particleMesh);
+  delete containerModels[e.detail.index];
+  delete jellyBeanSims[e.detail.index];
+
+  totalJellyBeansLeft += amount;
+  jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
+}
+
+function onHighlightCategory(e) {
+  var model = containerModels[e.detail.index];
+  if (!model) {
+    return;
+  }
+  model.traverse((o) => {
+    if (o.isMesh) {
+      o.material = highlightMat;
+    }
+  });
+}
+
+function onUnhighlightCategory(e) {
+  var model = containerModels[e.detail.index];
+  if (!model) {
+    return;
+  }
+  model.traverse((o) => {
+    if (o.isMesh) {
+      o.material = glassMat;
+    }
+  });
 }
 
 var paused = false;
@@ -318,8 +379,8 @@ async function render() {
     await renderer.renderAsync(scene, camera);
     return;
   }
-  for (const index of Object.keys(groups)) {
-    await groups[index].renderFunction(renderer, paused);
+  for (const index of Object.keys(jellyBeanSims)) {
+    await jellyBeanSims[index].renderFunction(renderer, paused);
   }
 
   await renderer.renderAsync(scene, camera);

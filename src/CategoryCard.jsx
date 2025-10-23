@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import Markdown from "react-markdown";
 
 const CategoryCard = (props) => {
   const { card, index, categoryCardClicked } = props;
@@ -9,6 +10,8 @@ const CategoryCard = (props) => {
   const [input, setInput] = useState("");
   const [showError, setShowError] = useState(false);
   const [lastLockedInInput, setLastLockedInInput] = useState(null);
+
+  const diyRef = useRef(null);
 
   var cn = "card category-card";
   cn += opened ? " opened" : " closed";
@@ -57,8 +60,21 @@ const CategoryCard = (props) => {
     setLastLockedInInput(input);
     document.dispatchEvent(
       new CustomEvent("category-set", {
-        detail: { index: index, percent: calculatePercent() },
+        detail: { index: index, percent: card.diy ? calculatePercentDiy() : calculatePercent() },
       })
+    );
+  };
+
+  const resetCard = () => {
+    setStarted(false);
+    setInput("");
+    setValidInput(false);
+    setShowError(false);
+    setLastLockedInInput(null);
+    document.dispatchEvent(
+      new CustomEvent("reset-category", {
+        detail: { index: index },
+      })  
     );
   };
 
@@ -75,6 +91,23 @@ const CategoryCard = (props) => {
     }
     return percent;
   };
+
+  const calculatePercentDiy = () => {
+    if (!validInput) {
+      console.log("Error calculating percent, returning 0");
+      return 0;
+    }
+    if (diyRef.current == "week") {
+      return input / (24 * 7);
+    } else if (diyRef.current == "day") {
+      return input / 24;
+    }
+    if (diyRef.current == "year") {
+      return input / (24 * 365.25);
+    }
+    return 0;
+  }
+
   return (
     <div
       className={cn}
@@ -88,6 +121,20 @@ const CategoryCard = (props) => {
           setOpened(!opened);
         }
       }}
+      onMouseEnter={() => {
+        document.dispatchEvent(
+          new CustomEvent("highlight-category", {
+            detail: { index: index },
+          })  
+        );
+      }}
+      onMouseLeave={() => {
+        document.dispatchEvent(
+          new CustomEvent("unhighlight-category", {
+            detail: { index: index },
+          })  
+        );
+      }}
     >
       <div className="card-title-div">
         <div className="card-title">{card.title}</div>
@@ -96,7 +143,39 @@ const CategoryCard = (props) => {
       </div>
       <div className={arrowCn}></div>
 
-      {opened && <div className="text-div prompt-text">{card.text}</div>}
+      {opened && !card.diy && (
+        <div className="text-div prompt-text">
+          <Markdown>{card.text}</Markdown>
+        </div>
+      )}
+
+      {opened && card.diy && (
+        <div className="text-div prompt-text">
+          How many hours a{"  "}
+          <select
+            name="selectedOption"
+            className="select-input prompt-select-input prompt-text"
+            onChange={(e) => {
+              diyRef.current = e.target.value;
+            }}
+          >
+            <option className="prompt-option" value="week">
+              week
+            </option>
+            <option className="prompt-option" value="day">
+              day
+            </option>
+            <option className="prompt-option" value="year">
+              year
+            </option>
+          </select>
+          {"  "}do you spend{" "}
+          <input
+            className="input prompt-input prompt-text prompt-inline-input"
+            placeholder="gaming"
+          />?
+        </div>
+      )}
       {opened && card.hint && (
         <div className="text-div prompt-hint">{card.hint}</div>
       )}
@@ -111,6 +190,8 @@ const CategoryCard = (props) => {
           />
           <span className="prompt-hours"> hours</span>
 
+          {started && <span className="reset-button" onClick={resetCard}>RESET</span>}
+         
           <button
             className={"button prompt-button " + (validInput ? "" : "disabled")}
             onClick={onButtonPressed}

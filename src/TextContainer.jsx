@@ -54,6 +54,7 @@ const TextContainer = (props) => {
     if (card.id == "show-categories") {
       setShowCategories(true);
     }
+
     nextCard();
   };
 
@@ -78,6 +79,7 @@ const TextContainer = (props) => {
               id={"card-" + i}
               userParams={userParams}
               setUserParams={setUserParams}
+              days={days}
             />
           );
         })}

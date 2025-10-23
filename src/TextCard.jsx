@@ -4,7 +4,8 @@ import Input from "./Input.jsx";
 import DownArrow from "/down-arrow.png";
 
 const TextCard = (props) => {
-  const { card, onButtonClicked, id, index, userParams, setUserParams } = props;
+  const { card, onButtonClicked, id, index, userParams, setUserParams, days } =
+    props;
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
@@ -20,6 +21,18 @@ const TextCard = (props) => {
     setShowDisclaimer(true);
   };
 
+  const processText = (text) => {
+    if (text.includes("[DAYS]")) {
+      text = text.replace("[DAYS]", days.toLocaleString());
+    }
+    if (text.includes("[GUESS]")) {
+      var guess = userParams.guess ?? 0;
+      console.log(guess, guess.toLocaleString());
+      text = text.replace("[GUESS]", guess.toLocaleString());
+    }
+    return text;
+  };
+
   return (
     <div className="card-container" style={{ top: index * 100 + "vh" }}>
       <div className={cn} id={id}>
@@ -27,6 +40,7 @@ const TextCard = (props) => {
         {card.subtitle && <Text text={card.subtitle} subtitle={true} />}
         {card.texts &&
           card.texts.map((text, i) => {
+            text = processText(text);
             return <Text text={text} key={"text-" + i} />;
           })}
 
@@ -39,6 +53,7 @@ const TextCard = (props) => {
             setUserParams={setUserParams}
             onButtonClicked={onButtonClicked}
             button={card.button}
+            long={card.long}
           />
         )}
 

@@ -44,7 +44,7 @@
         "input": "dropdown",
         "options": ["Male", "Female", "Other", "Prefer not to say"],
         "button": "CONFIRM",
-        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to play!"
+        "disclaimer": "This data is used for more accurate results and won't be saved. You can select 'Prefer not to say' ."
       },
       {
         "id": "race",
@@ -71,7 +71,7 @@
       },
       {
         "texts": [
-          "Now, imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
+          "Let's imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
         ],
         "top": true
       },
@@ -95,7 +95,23 @@
       {
         "texts": ["How many jelly beans do you think are in this jar?"],
         "input": "number",
+        "long": true,
         "button": "GUESS",
+        "top": true,
+        "id": "guess"
+      },
+      {
+        "texts": [
+          "That's a good guess! Here's the actual amount: ",
+          "[DAYS] Jelly Beans",
+          "(Your guess was [GUESS])"
+        ],
+        "top": true
+      },
+      {
+        "texts": [
+          "While it may be daunting to see your life like this, I think it's helpful to remember that **you're in charge of how you spend your days**."
+        ],
         "top": true
       },
       {

@@ -3,32 +3,32 @@
     {
       "id": "sleep",
       "title": "Sleep 🌙",
-      "text": "How many hours a night do you usually sleep?",
+      "text": "How many hours a **day** do you usually sleep?",
       "daily": true
     },
     {
       "id": "screen",
       "title": "Screen Time 🖥️",
-      "text": "How many hours a week do you usually spend on your devices?",
+      "text": "How many hours a **week** do you usually spend on your devices?",
       "hint": "Hint: Check your screen time reports!",
       "weekly": true
     },
     {
       "id": "commute",
       "title": "Commute 🚌",
-      "text": "How many hours a week do you spend commuting?",
+      "text": "How many hours a **week** do you spend commuting?",
       "weekly": true
     },
     {
       "id": "work",
       "title": "Work 👔",
-      "text": "How many hours a week do you spend working?",
+      "text": "How many hours a **week** do you spend working?",
       "weekly": true
     },
     {
       "id": "eat",
       "title": "Eat 🍽️",
-      "text": "How many hours a week do you spend eating?",
+      "text": "How many hours a **week** do you spend eating?",
       "weekly": true
     }
   ],
@@ -36,28 +36,27 @@
     {
       "id": "exercise",
       "title": "Exercise 🏋️",
-      "text": "How many hours a week do you spend exercising?",
+      "text": "How many hours a **week** do you spend exercising?",
       "weekly": true
     },
     {
       "id": "hobbies",
       "title": "Hobbies 🎨",
-      "text": "How many hours a week do you spend on your hobbies?",
+      "text": "How many hours a **week** do you spend on your hobbies?",
       "weekly": true
     },
     {
       "id": "tv",
       "title": "TV 📺",
-      "text": "How many hours a week do you spend watching TV?",
+      "text": "How many hours a **week** do you spend watching TV?",
       "weekly": true
     },
     {
       "id": "diy",
       "title": "Wildcard 🃏",
-      "text": "How many hours a week do you spend ____ ?",
+      "text": "How many hours a ??? do you spend ____ ?",
       "hint": "Make your own!",
-      "inline-input": true,
-      "weekly": true
+      "diy": true
     }
   ]
 }

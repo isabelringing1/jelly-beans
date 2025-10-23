@@ -47,7 +47,7 @@ const Categories = (props) => {
 
         {showError && (
           <div className="column-error">
-            Not enough Jelly Beans! Recheck your data.
+            Not enough Jelly Beans! Check your data.
           </div>
         )}
       </div>
