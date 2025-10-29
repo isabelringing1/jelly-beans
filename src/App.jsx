@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TextContainer from "./TextContainer.jsx";
 import Categories from "./Categories.jsx";
+import ContainerLabels from "./ContainerLabels.jsx";
 import { initializeLifeTables } from "./util/TimeCalculator.js";
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         setUserParams={setUserParams}
         setShowCategories={setShowCategories}
       />
+      <ContainerLabels />
       <Categories show={showCategories} />
     </div>
   );

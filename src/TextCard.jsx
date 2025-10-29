@@ -13,8 +13,8 @@ const TextCard = (props) => {
   if (card.hidden) {
     cn += " hidden";
   }
-  if (card.top) {
-    cn += " top";
+  if (card.bottom) {
+    cn += " bottom";
   }
 
   const onDisclaimerClicked = () => {
@@ -25,13 +25,19 @@ const TextCard = (props) => {
     if (text.includes("[DAYS]")) {
       text = text.replace("[DAYS]", days.toLocaleString());
     }
-    if (text.includes("[GUESS]")) {
+    if (text.includes("[OFF]")) {
       var guess = userParams.guess ?? 0;
-      console.log(guess, guess.toLocaleString());
-      text = text.replace("[GUESS]", guess.toLocaleString());
+      var percentOff = getPercentOff(days, guess);
+      text = text.replace("[OFF]", Math.abs(percentOff.toFixed(2)));
     }
     return text;
   };
+
+  function getPercentOff(v0, v1) {
+    if (v0 === 0) return 0; // avoid division by zero
+    const percentOff = ((v0 - v1) / v0) * 100;
+    return percentOff;
+  }
 
   return (
     <div className="card-container" style={{ top: index * 100 + "vh" }}>

@@ -54,6 +54,11 @@ const TextContainer = (props) => {
     if (card.id == "show-categories") {
       setShowCategories(true);
     }
+    if (card.id == "guess") {
+      setTimeout(() => {
+        document.getElementById("container-label-0").style.opacity = 1;
+      }, 1500);
+    }
 
     nextCard();
   };

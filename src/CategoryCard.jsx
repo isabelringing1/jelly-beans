@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import Markdown from "react-markdown";
 
 const CategoryCard = (props) => {
-  const { card, index, categoryCardClicked } = props;
+  const { card, index, categoryCardClicked, selected, setSelectedCardIndex } =
+    props;
   const [opened, setOpened] = useState(false);
   const [started, setStarted] = useState(false);
   const [validInput, setValidInput] = useState(false);
@@ -15,6 +16,7 @@ const CategoryCard = (props) => {
 
   var cn = "card category-card";
   cn += opened ? " opened" : " closed";
+  cn += selected ? " selected" : "";
 
   var arrowCn = "prompt-arrow";
   arrowCn += opened ? " arrow-opened" : "";
@@ -60,7 +62,10 @@ const CategoryCard = (props) => {
     setLastLockedInInput(input);
     document.dispatchEvent(
       new CustomEvent("category-set", {
-        detail: { index: index, percent: card.diy ? calculatePercentDiy() : calculatePercent() },
+        detail: {
+          index: index,
+          percent: card.diy ? calculatePercentDiy() : calculatePercent(),
+        },
       })
     );
   };
@@ -74,7 +79,7 @@ const CategoryCard = (props) => {
     document.dispatchEvent(
       new CustomEvent("reset-category", {
         detail: { index: index },
-      })  
+      })
     );
   };
 
@@ -106,10 +111,11 @@ const CategoryCard = (props) => {
       return input / (24 * 365.25);
     }
     return 0;
-  }
+  };
 
   return (
     <div
+      id={"category-" + index}
       className={cn}
       onClick={(e) => {
         var cn = e.target.className;
@@ -118,21 +124,33 @@ const CategoryCard = (props) => {
           !e.target.closest(".prompt-input-div")
         ) {
           categoryCardClicked();
-          setOpened(!opened);
+
+          if (opened && selected) {
+            setSelectedCardIndex(-1);
+            setOpened(false);
+          } else {
+            setSelectedCardIndex(index);
+            setOpened(true);
+            document.dispatchEvent(
+              new CustomEvent("category-selected", {
+                detail: { index: index },
+              })
+            );
+          }
         }
       }}
       onMouseEnter={() => {
         document.dispatchEvent(
           new CustomEvent("highlight-category", {
             detail: { index: index },
-          })  
+          })
         );
       }}
       onMouseLeave={() => {
         document.dispatchEvent(
           new CustomEvent("unhighlight-category", {
             detail: { index: index },
-          })  
+          })
         );
       }}
     >
@@ -173,7 +191,8 @@ const CategoryCard = (props) => {
           <input
             className="input prompt-input prompt-text prompt-inline-input"
             placeholder="gaming"
-          />?
+          />
+          ?
         </div>
       )}
       {opened && card.hint && (
@@ -190,8 +209,12 @@ const CategoryCard = (props) => {
           />
           <span className="prompt-hours"> hours</span>
 
-          {started && <span className="reset-button" onClick={resetCard}>RESET</span>}
-         
+          {started && (
+            <span className="reset-button" onClick={resetCard}>
+              RESET
+            </span>
+          )}
+
           <button
             className={"button prompt-button " + (validInput ? "" : "disabled")}
             onClick={onButtonPressed}

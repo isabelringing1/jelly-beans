@@ -27,6 +27,8 @@ class JellyBeanGroup {
     this.tslColors = null;
     this.index = index;
     this.clock = new THREE.Clock();
+    this.position = pos;
+    this.container = container;
     this.setupBuffers();
     this.setupUniforms(params, container, pos);
     this.setupComputeShaders(params);
@@ -79,7 +81,7 @@ class JellyBeanGroup {
     this.gridSizeUniform = TSL.uniform(this.gridSize);
     this.particleCountUniform = TSL.uniform(params.particleCount, "uint");
     this.stiffnessUniform = TSL.uniform(1000);
-    this.restDensityUniform = TSL.uniform(1); // look here
+    this.restDensityUniform = TSL.uniform(container.restDensity); // default 0.65
     this.dynamicViscosityUniform = TSL.uniform(5);
     this.dtUniform = TSL.uniform(1 / 60);
     this.gravityUniform = TSL.uniform(

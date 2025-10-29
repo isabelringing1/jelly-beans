@@ -2,12 +2,14 @@
   "column-1": [
     {
       "id": "sleep",
+      "index": 1,
       "title": "Sleep 🌙",
       "text": "How many hours a **day** do you usually sleep?",
       "daily": true
     },
     {
       "id": "screen",
+      "index": 2,
       "title": "Screen Time 🖥️",
       "text": "How many hours a **week** do you usually spend on your devices?",
       "hint": "Hint: Check your screen time reports!",
@@ -15,18 +17,21 @@
     },
     {
       "id": "commute",
+      "index": 3,
       "title": "Commute 🚌",
       "text": "How many hours a **week** do you spend commuting?",
       "weekly": true
     },
     {
       "id": "work",
+      "index": 4,
       "title": "Work 👔",
       "text": "How many hours a **week** do you spend working?",
       "weekly": true
     },
     {
       "id": "eat",
+      "index": 5,
       "title": "Eat 🍽️",
       "text": "How many hours a **week** do you spend eating?",
       "weekly": true
@@ -35,28 +40,39 @@
   "column-3": [
     {
       "id": "exercise",
+      "index": 6,
       "title": "Exercise 🏋️",
       "text": "How many hours a **week** do you spend exercising?",
       "weekly": true
     },
     {
       "id": "hobbies",
+      "index": 7,
       "title": "Hobbies 🎨",
       "text": "How many hours a **week** do you spend on your hobbies?",
       "weekly": true
     },
     {
       "id": "tv",
+      "index": 8,
       "title": "TV 📺",
       "text": "How many hours a **week** do you spend watching TV?",
       "weekly": true
     },
     {
       "id": "diy",
+      "index": 9,
       "title": "Wildcard 🃏",
       "text": "How many hours a ??? do you spend ____ ?",
       "hint": "Make your own!",
       "diy": true
+    }
+  ],
+  "other": [
+    {
+      "id": "main",
+      "title": "Life",
+      "index": 0
     }
   ]
 }

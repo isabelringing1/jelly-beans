@@ -12,11 +12,13 @@
         ]
       },
       {
-        "texts": ["Sorry. That probably freaked you out."]
+        "texts": [
+          "Sorry. That probably freaked you out.",
+          "Let me start over..."
+        ]
       },
       {
         "texts": [
-          "Let me start over...",
           "Hi, I'm Isabel. Lately, I've been thinking about how much time I have left to live.",
           "Maybe you have too."
         ]
@@ -67,58 +69,53 @@
       },
       {
         "texts": ["Great."],
-        "top": true
+        "bottom": true
       },
       {
         "texts": [
-          "Let's imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
+          "Now, let's imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
         ],
-        "top": true
+        "bottom": true
       },
       {
         "id": "pre-reveal",
         "texts": ["What would that look like?"],
         "button": "SHOW ME",
-        "top": true
+        "bottom": true
       },
       {
         "hidden": true
       },
       {
         "texts": ["Hey, that's not bad."],
-        "top": true
+        "bottom": true
       },
       {
         "texts": ["Let's play a guessing game, just for fun..."],
-        "top": true
+        "bottom": true
       },
       {
         "texts": ["How many jelly beans do you think are in this jar?"],
         "input": "number",
         "long": true,
         "button": "GUESS",
-        "top": true,
+        "bottom": true,
         "id": "guess"
       },
       {
         "texts": [
-          "That's a good guess! Here's the actual amount: ",
+          "Good guess! Here's the actual amount: ",
           "[DAYS] Jelly Beans",
-          "(Your guess was [GUESS])"
+          "(You were [OFF]% off)"
         ],
-        "top": true
+        "bottom": true
       },
+
       {
         "texts": [
           "While it may be daunting to see your life like this, I think it's helpful to remember that **you're in charge of how you spend your days**."
         ],
-        "top": true
-      },
-      {
-        "texts": [
-          "While it may be daunting to see your life like this, I think it's helpful to remember that **you're in charge of how you spend your days**."
-        ],
-        "top": true
+        "bottom": true
       },
       {
         "id": "show-categories",
@@ -126,7 +123,7 @@
           "With that in mind, let's explore how your life breaks down:"
         ],
         "button": "START",
-        "top": true
+        "bottom": true
       }
     ]
   }

@@ -10,6 +10,7 @@ const Categories = (props) => {
 
   const [showHelper, setShowHelper] = useState(true);
   const [showError, setShowError] = useState(false);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -24,15 +25,26 @@ const Categories = (props) => {
     setShowHelper(false);
   };
   return (
-    <div id="categories" className={cn}>
+    <div
+      id="categories"
+      className={cn}
+      onClick={(e) => {
+        console.log("here");
+        if (!e.target.closest(".category-card")) {
+          setSelectedCardIndex(-1);
+        }
+      }}
+    >
       <div className="column" id="column-1">
         {column1.map((question, i) => {
           return (
             <CategoryCard
               card={question}
-              index={i + 1}
+              index={question.index}
               key={"category-" + i}
               categoryCardClicked={onCategoryCardClicked}
+              setSelectedCardIndex={setSelectedCardIndex}
+              selected={question.index == selectedCardIndex}
             />
           );
         })}
@@ -56,9 +68,11 @@ const Categories = (props) => {
           return (
             <CategoryCard
               card={question}
-              index={column1.length + i + 1}
+              index={question.index}
               key={"category-" + i}
               categoryCardClicked={onCategoryCardClicked}
+              setSelectedCardIndex={setSelectedCardIndex}
+              selected={selectedCardIndex == question.index}
             />
           );
         })}

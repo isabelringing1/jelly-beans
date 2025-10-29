@@ -2,7 +2,7 @@ import * as THREE from "three/webgpu";
 import * as TWEEN from "https://unpkg.com/@tweenjs/tween.js@23.1.3/dist/tween.esm.js";
 
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from "three-stdlib";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { JellyBeanGroup } from "./JellyBeanGroup.js";
@@ -41,6 +41,7 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
   //renderer.toneMapping = THREE.ACESFilmicToneMapping;
   //srenderer.toneMappingExposure = 1.2;
   document.body.appendChild(renderer.domElement);
@@ -77,6 +78,7 @@ async function init() {
 
   var jarModel = await setUpContainer(containers["jar"], [0, -0.17, 0]);
   containerModels[0] = jarModel;
+
   //setUpTest();
 
   const light = new THREE.PointLight(0xffffff, 300);
@@ -95,12 +97,15 @@ async function init() {
 
   controls = new OrbitControls(camera, renderer.domElement);
 
-  controls.maxPolarAngle = Math.PI * 0.35;
   controls.enableZoom = false;
   controls.enablePan = false;
+  controls.enableRotate = true;
+  controls.maxPolarAngle = 1.1;
+  controls.minPolarAngle = 0.85;
+  controls.maxDistance = 3;
+  controls.minDistance = 0.6;
   //controls.autoRotate = true;
   controls.touches = { TWO: THREE.TOUCH.DOLLY_ROTATE };
-  //controls.target = jarModel.positions;
 
   controls.update();
   renderer.setAnimationLoop(render);
@@ -118,6 +123,7 @@ async function init() {
   document.addEventListener("reset-category", onResetCategory);
   document.addEventListener("highlight-category", onHighlightCategory);
   document.addEventListener("unhighlight-category", onUnhighlightCategory);
+  document.addEventListener("category-selected", onCategorySelected);
 }
 
 function animateCameraZoom() {
@@ -127,11 +133,60 @@ function animateCameraZoom() {
     z: camera.position.z,
   };
   new TWEEN.Tween(coords)
-    .to({ x: -0.75, y: 0.6, z: -0.75 }, 2000)
+    .to({ x: -0.9, y: 0.6, z: -0.9 }, 2000)
     .onUpdate(() => camera.position.set(coords.x, coords.y, coords.z))
     .easing(TWEEN.Easing.Quadratic.InOut)
     .delay(800)
     .start();
+}
+
+function moveCameraToGroup(group, azimuth) {
+  console.log("recorded azimuth: " + azimuth);
+
+  var spherical = new THREE.Spherical();
+  spherical.radius = controls.getDistance();
+  spherical.phi = controls.getPolarAngle();
+  spherical.theta = controls.getAzimuthalAngle();
+  console.log(controls.getPolarAngle());
+  var sphericalObj = {
+    a: controls.getAzimuthalAngle(),
+    r: controls.getDistance(),
+    p: controls.getPolarAngle(),
+
+    x: controls.target.x,
+    y: controls.target.y,
+    z: controls.target.z,
+  };
+  var azimuthTween = new TWEEN.Tween(sphericalObj)
+    .to(
+      {
+        a: azimuth,
+        r: 2.5,
+        p: 1.1,
+        x: group.position[0],
+        y: group.position[1],
+        z: group.position[2],
+      },
+      2000
+    )
+    .onUpdate(() => {
+      spherical.theta = sphericalObj.a;
+      spherical.radius = sphericalObj.r;
+      spherical.phi = sphericalObj.p;
+      camera.position.setFromSpherical(spherical);
+      controls.target.set(sphericalObj.x, sphericalObj.y, sphericalObj.z);
+    })
+    .easing(TWEEN.Easing.Quadratic.InOut);
+
+  var targetTween = new TWEEN.Tween(controls.target)
+    .to(
+      { x: group.position[0], y: group.position[1], z: group.position[2] },
+      1000
+    )
+    .easing(TWEEN.Easing.Quadratic.InOut);
+
+  azimuthTween.start();
+  //targetTween.start();
 }
 
 function onQuestionsAnswered() {
@@ -142,7 +197,7 @@ function showJellyBeans(
   index = 0,
   amount = -1,
   container = {},
-  pos = [0, 0, 0]
+  pos = [0, 0, 0, 0]
 ) {
   if (amount != -1) {
     params.particleCount = amount;
@@ -166,6 +221,11 @@ function showJellyBeans(
     jellyBeansSetUp = true;
     controls.autoRotate = false;
     group.setParticleCount(params.particleCount);
+
+    if (index != 0) {
+      moveCameraToGroup(group, pos[3]);
+    }
+
     setTimeout(() => {
       //paused = true;
     }, 3500);
@@ -299,8 +359,6 @@ async function onCategorySet(e) {
     var p = getRandomPosition();
     var model = await setUpContainer(c, p);
     containerModels[e.detail.index] = model;
-
-    console.log(c);
     showJellyBeans(e.detail.index, subamount, c, p);
   }
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
@@ -345,12 +403,26 @@ function onUnhighlightCategory(e) {
   });
 }
 
+function onCategorySelected(e) {
+  var group = jellyBeanSims[e.detail.index];
+  if (group) {
+    moveCameraToGroup(group, group.position[3]);
+  }
+}
+
 var paused = false;
 function setupInputs() {
   const onKeyDown = (e) => {
+    console.log("azimuth: " + controls.getAzimuthalAngle());
+    console.log("distance: " + controls.getDistance());
     if (e.key == "s") {
       document.getElementById("text-container").style.display = "none";
       document.getElementById("categories").style.opacity = 1;
+      setTimeout(
+        () => (document.getElementById("container-label-0").style.opacity = 1),
+        1500
+      );
+
       animateCameraZoom();
       totalJellyBeans = params.particleCount;
       totalJellyBeansLeft = params.particleCount;
@@ -372,6 +444,26 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function toScreenPosition(obj) {
+  var vector = new THREE.Vector3();
+
+  var widthHalf = 0.5 * window.innerWidth;
+  var heightHalf = 0.5 * window.innerHeight;
+
+  obj.updateMatrixWorld();
+  vector.setFromMatrixPosition(obj.matrixWorld);
+  vector.project(camera);
+
+  vector.x = vector.x * widthHalf + widthHalf;
+  vector.y = -(vector.y * heightHalf) + heightHalf;
+
+  return {
+    x: vector.x,
+    y: vector.y,
+    distance: camera.position.distanceTo(obj.position),
+  };
+}
+
 async function render() {
   TWEEN.update();
   controls.update();
@@ -382,6 +474,27 @@ async function render() {
   for (const index of Object.keys(jellyBeanSims)) {
     await jellyBeanSims[index].renderFunction(renderer, paused);
   }
+  var containerData = [];
+  for (const [index, model] of Object.entries(containerModels)) {
+    var screenPos = toScreenPosition(model);
+    screenPos.amount = jellyBeanSims[index]
+      ? jellyBeanSims[index].getParticleCount()
+      : 0;
+    screenPos.index = index;
+    screenPos.yOffset =
+      jellyBeanSims[index] &&
+      jellyBeanSims[index].container.labelYOffset != undefined
+        ? jellyBeanSims[index].container.labelYOffset
+        : 0;
+    containerData.push(screenPos);
+  }
+
+  document.dispatchEvent(
+    new CustomEvent("screen-data", {
+      detail: { data: containerData },
+    })
+  );
+  //console.log(controls.getAzimuthalAngle());
 
   await renderer.renderAsync(scene, camera);
 }
