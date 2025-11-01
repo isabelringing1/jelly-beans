@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import TextCard from "./TextCard.jsx";
 import instructions from "./json/instructions.json";
@@ -6,14 +6,29 @@ import { getDaysLeft } from "./util/TimeCalculator.js";
 
 const TextContainer = (props) => {
   const { userParams, setUserParams, setShowCategories } = props;
-  const [currentSequence, setCurrentSequence] = useState(null);
+  const [currentSequence, setCurrentSequence] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [days, setDays] = useState(0);
+  var isAnimating = useRef(false);
 
   useEffect(() => {
     var sequence = instructions["start"];
     setCurrentSequence(sequence);
   }, []);
+
+  const onScroll = (e) => {
+    if (
+      isAnimating.current ||
+      !currentSequence ||
+      currentSequence.cards[currentCardIndex].button
+    ) {
+      return;
+    }
+
+    if (e.deltaY > 20) {
+      processCard();
+    }
+  };
 
   const onTextContainerClicked = () => {
     if (currentSequence.cards[currentCardIndex].button) {
@@ -65,15 +80,20 @@ const TextContainer = (props) => {
 
   const nextCard = () => {
     setCurrentCardIndex(currentCardIndex + 1);
+    isAnimating.current = true;
+    setTimeout(() => {
+      isAnimating.current = false;
+    }, 600);
   };
 
   return (
     <div
       id="text-container"
       onClick={onTextContainerClicked}
+      onWheel={onScroll}
       style={{ top: -100 * currentCardIndex + "vh" }}
     >
-      {currentSequence &&
+      {currentSequence.cards &&
         currentSequence.cards.map((card, i) => {
           return (
             <TextCard

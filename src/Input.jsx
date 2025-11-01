@@ -42,8 +42,29 @@ const Input = (props) => {
   const onInputChange = (e) => {
     var newUserParams = { ...userParams };
     if (id == "birth-date") {
-      newUserParams["day"] = dayRef.current.value;
+      console.log(e.target.id, e.nativeEvent.inputTpe);
       newUserParams["month"] = monthRef.current.value;
+      if (
+        monthRef.current.value.length == 2 &&
+        e.target.id == "month-input" &&
+        e.nativeEvent.inputType == "insertText"
+      ) {
+        var input = document.getElementById("day-input");
+        input.focus();
+        input.select();
+      }
+
+      newUserParams["day"] = dayRef.current.value;
+      if (
+        dayRef.current.value.length == 2 &&
+        e.target.id == "day-input" &&
+        e.nativeEvent.inputType == "insertText"
+      ) {
+        var input = document.getElementById("year-input");
+        input.focus();
+        input.select();
+      }
+
       newUserParams["year"] = yearRef.current.value;
     }
     if (id == "gender") {
@@ -103,6 +124,7 @@ const Input = (props) => {
             placeholder="MM"
             onChange={onInputChange}
             ref={monthRef}
+            tabIndex="-1"
           />
           <input
             id="day-input"
@@ -111,6 +133,7 @@ const Input = (props) => {
             placeholder="DD"
             onChange={onInputChange}
             ref={dayRef}
+            tabIndex="-1"
           />
           <input
             id="year-input"
@@ -119,6 +142,7 @@ const Input = (props) => {
             placeholder="YYYY"
             onChange={onInputChange}
             ref={yearRef}
+            tabIndex="-1"
           />
         </div>
       )}
@@ -151,6 +175,7 @@ const Input = (props) => {
           type="number"
           onChange={onInputChange}
           ref={numberRef}
+          tabIndex="-1"
         />
       )}
 

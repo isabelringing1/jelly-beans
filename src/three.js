@@ -27,7 +27,7 @@ if (WebGPU.isAvailable() === false) {
   throw new Error("No WebGPU support");
 }
 
-const gui = new GUI();
+//const gui = new GUI();
 
 const params = {
   particleCount: 23750,
@@ -213,17 +213,17 @@ function showJellyBeans(
       gridSize
     );
     jellyBeanSims[index] = group;
-    gui
+    /*gui
       .add(params, "particleCount", 100, maxParticles, 10)
       .onChange((value) => {
         group.setParticleCount(value);
-      });
+      });*/
     jellyBeansSetUp = true;
     controls.autoRotate = false;
     group.setParticleCount(params.particleCount);
 
     if (index != 0) {
-      moveCameraToGroup(group, pos[3]);
+      moveCameraToGroup(jellyBeanSims[0], pos[3]);
     }
 
     setTimeout(() => {
@@ -369,6 +369,7 @@ function onResetCategory(e) {
 
   var model = containerModels[e.detail.index];
   var jellyBeanSim = jellyBeanSims[e.detail.index];
+  if (jellyBeanSim == null) return;
   var amount = jellyBeanSim.getParticleCount();
   scene.remove(model);
   scene.remove(jellyBeanSim.particleMesh);
@@ -377,6 +378,7 @@ function onResetCategory(e) {
 
   totalJellyBeansLeft += amount;
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
+  moveCameraToGroup(0, 1.1);
 }
 
 function onHighlightCategory(e) {

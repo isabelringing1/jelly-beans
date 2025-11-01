@@ -2,8 +2,14 @@ import { useState, useRef, useEffect } from "react";
 import Markdown from "react-markdown";
 
 const CategoryCard = (props) => {
-  const { card, index, categoryCardClicked, selected, setSelectedCardIndex } =
-    props;
+  const {
+    card,
+    index,
+    categoryCardClicked,
+    selected,
+    setSelectedCardIndex,
+    setWildcardCategory,
+  } = props;
   const [opened, setOpened] = useState(false);
   const [started, setStarted] = useState(false);
   const [validInput, setValidInput] = useState(false);
@@ -12,7 +18,7 @@ const CategoryCard = (props) => {
   const [showError, setShowError] = useState(false);
   const [lastLockedInInput, setLastLockedInInput] = useState(null);
 
-  const diyRef = useRef(null);
+  const diyRef = useRef("week");
 
   var cn = "card category-card";
   cn += opened ? " opened" : " closed";
@@ -21,6 +27,23 @@ const CategoryCard = (props) => {
   var arrowCn = "prompt-arrow";
   arrowCn += opened ? " arrow-opened" : "";
   arrowCn += started ? " edit-arrow" : " start-arrow";
+
+  const resetCard = () => {
+    document.dispatchEvent(
+      new CustomEvent("reset-category", {
+        detail: { index: index },
+      })
+    );
+    setStarted(false);
+    setInput("");
+    setValidInput(false);
+    setShowError(false);
+    setLastLockedInInput(null);
+  };
+
+  useState(() => {
+    document.addEventListener("reset-categories", resetCard);
+  }, []);
 
   useEffect(() => {
     if (!opened && lastLockedInInput) {
@@ -70,19 +93,6 @@ const CategoryCard = (props) => {
     );
   };
 
-  const resetCard = () => {
-    setStarted(false);
-    setInput("");
-    setValidInput(false);
-    setShowError(false);
-    setLastLockedInInput(null);
-    document.dispatchEvent(
-      new CustomEvent("reset-category", {
-        detail: { index: index },
-      })
-    );
-  };
-
   const calculatePercent = () => {
     if (!validInput) {
       console.log("Error calculating percent, returning 0");
@@ -102,6 +112,7 @@ const CategoryCard = (props) => {
       console.log("Error calculating percent, returning 0");
       return 0;
     }
+    console.log(diyRef.current);
     if (diyRef.current == "week") {
       return input / (24 * 7);
     } else if (diyRef.current == "day") {
@@ -174,7 +185,7 @@ const CategoryCard = (props) => {
             name="selectedOption"
             className="select-input prompt-select-input prompt-text"
             onChange={(e) => {
-              diyRef.current = e.target.value;
+              console.log(e.target.value);
             }}
           >
             <option className="prompt-option" value="week">
@@ -191,6 +202,9 @@ const CategoryCard = (props) => {
           <input
             className="input prompt-input prompt-text prompt-inline-input"
             placeholder="gaming"
+            onChange={(e) => {
+              setWildcardCategory(e.target.value != "" ? e.target.value : "");
+            }}
           />
           ?
         </div>

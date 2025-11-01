@@ -4,6 +4,7 @@
       "id": "sleep",
       "index": 1,
       "title": "Sleep 🌙",
+      "label": "Sleeping",
       "text": "How many hours a **day** do you usually sleep?",
       "daily": true
     },
@@ -12,6 +13,7 @@
       "index": 2,
       "title": "Screen Time 🖥️",
       "text": "How many hours a **week** do you usually spend on your devices?",
+      "label": "Screens",
       "hint": "Hint: Check your screen time reports!",
       "weekly": true
     },
@@ -19,6 +21,7 @@
       "id": "commute",
       "index": 3,
       "title": "Commute 🚌",
+      "label": "Commuting",
       "text": "How many hours a **week** do you spend commuting?",
       "weekly": true
     },
@@ -26,6 +29,7 @@
       "id": "work",
       "index": 4,
       "title": "Work 👔",
+      "label": "Working",
       "text": "How many hours a **week** do you spend working?",
       "weekly": true
     },
@@ -33,6 +37,7 @@
       "id": "eat",
       "index": 5,
       "title": "Eat 🍽️",
+      "label": "Eating",
       "text": "How many hours a **week** do you spend eating?",
       "weekly": true
     }
@@ -42,6 +47,7 @@
       "id": "exercise",
       "index": 6,
       "title": "Exercise 🏋️",
+      "label": "Exercising",
       "text": "How many hours a **week** do you spend exercising?",
       "weekly": true
     },
@@ -49,6 +55,7 @@
       "id": "hobbies",
       "index": 7,
       "title": "Hobbies 🎨",
+      "label": "Hobbies",
       "text": "How many hours a **week** do you spend on your hobbies?",
       "weekly": true
     },
@@ -56,6 +63,7 @@
       "id": "tv",
       "index": 8,
       "title": "TV 📺",
+      "label": "Watching TV",
       "text": "How many hours a **week** do you spend watching TV?",
       "weekly": true
     },
@@ -71,7 +79,7 @@
   "other": [
     {
       "id": "main",
-      "title": "Life",
+      "title": "The Rest",
       "index": 0
     }
   ]

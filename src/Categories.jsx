@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import CategoryCard from "./CategoryCard";
+import Modal from "./Modal";
+
 import categories from "./json/categories.json";
 
 const Categories = (props) => {
-  const { show } = props;
+  const { show, setWildcardCategory } = props;
   var cn = show ? "" : "hidden";
   var column1 = categories["column-1"];
   var column3 = categories["column-3"];
@@ -11,6 +13,7 @@ const Categories = (props) => {
   const [showHelper, setShowHelper] = useState(true);
   const [showError, setShowError] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
+  const [modalMode, setModalMode] = useState("none"); // none, info
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -29,7 +32,6 @@ const Categories = (props) => {
       id="categories"
       className={cn}
       onClick={(e) => {
-        console.log("here");
         if (!e.target.closest(".category-card")) {
           setSelectedCardIndex(-1);
         }
@@ -45,6 +47,7 @@ const Categories = (props) => {
               categoryCardClicked={onCategoryCardClicked}
               setSelectedCardIndex={setSelectedCardIndex}
               selected={question.index == selectedCardIndex}
+              setWildcardCategory={setWildcardCategory}
             />
           );
         })}
@@ -62,6 +65,28 @@ const Categories = (props) => {
             Not enough Jelly Beans! Check your data.
           </div>
         )}
+
+        <div className="column-buttons">
+          <div
+            className="column-button"
+            onClick={() => {
+              setModalMode("confirm-reset");
+            }}
+          >
+            Reset All
+          </div>
+          <div
+            className="info-button"
+            onClick={() => {
+              setModalMode("info");
+            }}
+          >
+            ?
+          </div>
+          <div className="column-button">Start Over</div>
+        </div>
+
+        <Modal modalMode={modalMode} setModalMode={setModalMode} />
       </div>
       <div className="column" id="column-3">
         {column3.map((question, i) => {
@@ -73,6 +98,7 @@ const Categories = (props) => {
               categoryCardClicked={onCategoryCardClicked}
               setSelectedCardIndex={setSelectedCardIndex}
               selected={selectedCardIndex == question.index}
+              setWildcardCategory={setWildcardCategory}
             />
           );
         })}

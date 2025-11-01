@@ -4,6 +4,7 @@ import ContainerLabel from "./ContainerLabel";
 import categories from "./json/categories.json";
 
 const ContainerLabels = (props) => {
+  const { wildcardCategory } = props;
   const [posArray, setPosArray] = useState([]);
   const [catDict, setCatDict] = useState({});
 
@@ -35,6 +36,7 @@ const ContainerLabels = (props) => {
             pos={pos}
             key={"label-" + i}
             category={catDict[parseInt(pos.index)]}
+            wildcardCategory={wildcardCategory}
           />
         );
       })}

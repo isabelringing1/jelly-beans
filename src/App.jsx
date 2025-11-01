@@ -7,6 +7,7 @@ import { initializeLifeTables } from "./util/TimeCalculator.js";
 const App = () => {
   const [userParams, setUserParams] = useState({});
   const [showCategories, setShowCategories] = useState(false);
+  const [wildcardCategory, setWildcardCategory] = useState("gaming");
 
   useEffect(() => {
     fetch("/public/life_tables.csv")
@@ -23,8 +24,11 @@ const App = () => {
         setUserParams={setUserParams}
         setShowCategories={setShowCategories}
       />
-      <ContainerLabels />
-      <Categories show={showCategories} />
+      <ContainerLabels wildcardCategory={wildcardCategory} />
+      <Categories
+        show={showCategories}
+        setWildcardCategory={setWildcardCategory}
+      />
     </div>
   );
 };

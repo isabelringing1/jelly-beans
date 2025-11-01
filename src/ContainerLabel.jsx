@@ -1,11 +1,21 @@
 import { useState } from "react";
 
 const ContainerLabel = (props) => {
-  const { pos, category } = props;
+  const { pos, category, wildcardCategory } = props;
   const [hover, setHover] = useState(false);
   var offsetY = (-window.innerHeight + pos.yOffset) / (pos.distance * 1.1);
 
-  var title = category ? category.title : "";
+  const getTitle = () => {
+    if (!category) {
+      return "";
+    }
+    if (category.diy) {
+      return (
+        wildcardCategory.charAt(0).toUpperCase() + wildcardCategory.slice(1)
+      );
+    }
+    return category.label;
+  };
   return (
     <div
       className={"container-label" + (hover ? " label-hover" : "")}
@@ -35,7 +45,7 @@ const ContainerLabel = (props) => {
         className="container-text container-title"
         id={"container-title-" + category.index}
       >
-        {title}
+        {getTitle()}
       </div>
       <div className="container-text"> {pos.amount.toLocaleString()} beans</div>
       <div
