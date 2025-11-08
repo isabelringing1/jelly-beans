@@ -2,12 +2,15 @@
   "name": "jelly-beans",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://isabelringing1.github.io/jelly-beans",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -18,6 +21,7 @@
     "@react-three/rapier": "^2.1.0",
     "@types/three": "^0.178.1",
     "@vanillaes/csv": "^3.0.4",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.6.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
