@@ -8,36 +8,53 @@
       "yOffset": 0,
       "file": "new_jar2.glb",
       "max": 10000000000,
-      "min": 5000,
-      "bounce": 1,
+      "min": 6500,
+      "bounce": 1.5,
       "restDensity": 0.65,
-      "labelYOffset": 100
+      "labelYOffset": 100,
+      "bananaPosOffset": [-0.27, 0.12, 0.27]
+    },
+    "fish_bowl": {
+      "id": "fish_bowl",
+      "radius": 12,
+      "subtract": 15,
+      "scale": [0.02, 0.02, 0.02],
+      "yOffset": 0.05,
+      "file": "fish_bowl.glb",
+      "max": 6500,
+      "min": 3000,
+      "bounce": 3,
+      "restDensity": 0.65,
+      "labelYOffset": 300,
+      "bananaPosOffset": [-0.2, 0.12, 0.2]
     },
     "bowl": {
       "id": "bowl",
       "radius": 16,
       "subtract": 15.0,
-      "max": 5000,
-      "min": 2000,
+      "max": 3000,
+      "min": 1800,
       "scale": [0.008, 0.008, 0.008],
       "yOffset": 0.2,
       "file": "pedestal_bowl.glb",
       "bounce": 3,
       "restDensity": 0.5,
-      "labelYOffset": 400
+      "labelYOffset": 400,
+      "bananaPosOffset": [-0.2, 0.15, 0.2]
     },
     "wine": {
       "id": "wine",
       "radius": 5.0,
       "subtract": 15.0,
-      "max": 2000,
+      "max": 1800,
       "min": 1000,
       "scale": [0.014, 0.018, 0.014],
       "yOffset": 0.3,
       "file": "wine_glass.glb",
-      "bounce": 1.5,
+      "bounce": 3,
       "restDensity": 0.65,
-      "labelYOffset": -200
+      "labelYOffset": 0,
+      "bananaPosOffset": [-0.12, 0.3, 0.12]
     },
     "dish": {
       "id": "dish",
@@ -50,7 +67,8 @@
       "file": "dish.glb",
       "bounce": 20,
       "restDensity": 0.65,
-      "labelYOffset": 900
+      "labelYOffset": 850,
+      "bananaPosOffset": [-0.15, 0.07, 0.15]
     }
   },
   "positions": [

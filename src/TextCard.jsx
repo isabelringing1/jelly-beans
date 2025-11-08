@@ -28,7 +28,10 @@ const TextCard = (props) => {
     if (text.includes("[OFF]")) {
       var guess = userParams.guess ?? 0;
       var percentOff = getPercentOff(days, guess);
-      text = text.replace("[OFF]", Math.abs(percentOff.toFixed(2)));
+      text = text.replace(
+        "[OFF]",
+        Math.abs(percentOff.toFixed(2).toLocaleString())
+      );
     }
     return text;
   };
@@ -69,6 +72,7 @@ const TextCard = (props) => {
               className="button"
               id="next-button"
               onClick={onButtonClicked}
+              tabIndex="-1"
             >
               {card.button}
             </button>

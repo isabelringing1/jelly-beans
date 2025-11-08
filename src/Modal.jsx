@@ -7,21 +7,33 @@ const Modal = (props) => {
   const [text, setText] = useState([]);
   const [buttons, setButtons] = useState([]);
   const [actions, setActions] = useState([]);
+  const [leftAligned, setLeftAligned] = useState(false);
 
   useEffect(() => {
+    setLeftAligned(false);
     if (modalMode == "info") {
       setTitle("About");
       setText([
-        "Life expectancy is calculated using the CDC's [National Vital Statistics Reports](https://www.ncbi.nlm.nih.gov/books/NBK614547/), based off data collected in 2022.",
+        "Data for calculating life expectancy is from the CDC's [National Vital Statistics Reports](https://www.ncbi.nlm.nih.gov/books/NBK614547/), based on death rates in 2022.",
+        "This means data is unfortunately biased towards the United States. Any suggestions for sources of recent, global life table data are welcome.",
+        "This project was inspired by [All The Ghosts You Will Be](https://www.youtube.com/watch?v=xHd4zsIbXJ0) by Vsauce. Its name is a homage to Wait But Why's [Your Life in Weeks](https://waitbutwhy.com/2014/05/life-weeks.html).",
+        "Made by [Isabel Lee](https://isabellee.me).",
       ]);
       setButtons(["CLOSE"]);
       setActions([closeModal]);
+      setLeftAligned(true);
     }
     if (modalMode == "confirm-reset") {
       setTitle("Are you sure?");
       setText(["This will clear data from all categories."]);
       setButtons(["CANCEL", "RESET"]);
       setActions([closeModal, resetCategories]);
+    }
+    if (modalMode == "start-over") {
+      setTitle("Are you sure?");
+      setText(["This will clear all data you've inputted so far."]);
+      setButtons(["CANCEL", "START OVER"]);
+      setActions([closeModal, startOver]);
     }
   }, [modalMode]);
 
@@ -32,6 +44,11 @@ const Modal = (props) => {
   const resetCategories = () => {
     document.dispatchEvent(new CustomEvent("reset-categories"));
     setModalMode("none");
+  };
+
+  const startOver = () => {
+    localStorage.clear();
+    location.reload();
   };
 
   return (
@@ -50,7 +67,10 @@ const Modal = (props) => {
         <div className="modal-text-container">
           {text.map((t, i) => {
             return (
-              <div key={"modal-text-" + i} className="modal-text">
+              <div
+                key={"modal-text-" + i}
+                className={"modal-text modal-text-" + modalMode}
+              >
                 <Markdown>{t}</Markdown>
               </div>
             );

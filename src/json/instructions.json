@@ -2,8 +2,8 @@
   "start": {
     "cards": [
       {
-        "title": "The Jelly Bean Interpretation",
-        "subtitle": "An interactive exploration about candy and the rest of your life.",
+        "title": "Your Life in Jelly Beans",
+        "subtitle": "An interactive exploration about candy and the rest of your days.",
         "button": "START"
       },
       {
@@ -46,7 +46,7 @@
         "input": "dropdown",
         "options": ["Male", "Female", "Other", "Prefer not to say"],
         "button": "CONFIRM",
-        "disclaimer": "This data is used for more accurate results and won't be saved. You can select 'Prefer not to say' ."
+        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to continue."
       },
       {
         "id": "race",
@@ -62,7 +62,7 @@
           "Prefer not to say"
         ],
         "button": "Confirm",
-        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to play!"
+        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to continue."
       },
       {
         "hidden": true
@@ -104,23 +104,33 @@
       },
       {
         "texts": [
-          "Good guess! Here's the actual amount: ",
-          "[DAYS] Jelly Beans",
-          "(You were [OFF]% off)"
+          "Good guess! Here's the actual amount...",
+          "(You were just [OFF]% off)"
         ],
         "bottom": true
       },
-
+      {
+        "texts": ["Is it daunting to see your life laid like this?"],
+        "bottom": true
+      },
+      {
+        "texts": ["If so, you're not alone."],
+        "bottom": true
+      },
       {
         "texts": [
-          "While it may be daunting to see your life like this, I think it's helpful to remember that **you're in charge of how you spend your days**."
+          "When I get too spooked, I think it's helpful to remember..."
         ],
+        "bottom": true
+      },
+      {
+        "texts": ["**You're in charge of how you spend your days**."],
         "bottom": true
       },
       {
         "id": "show-categories",
         "texts": [
-          "With that in mind, let's explore the various ways you can break down your life:"
+          "With that in mind, let's explore the various ways you can break down your life."
         ],
         "button": "START",
         "bottom": true

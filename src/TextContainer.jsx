@@ -5,10 +5,9 @@ import instructions from "./json/instructions.json";
 import { getDaysLeft } from "./util/TimeCalculator.js";
 
 const TextContainer = (props) => {
-  const { userParams, setUserParams, setShowCategories } = props;
+  const { userParams, setUserParams, setShowCategories, days, setDays } = props;
   const [currentSequence, setCurrentSequence] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [days, setDays] = useState(0);
   var isAnimating = useRef(false);
 
   useEffect(() => {

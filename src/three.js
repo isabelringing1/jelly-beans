@@ -11,12 +11,12 @@ import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js"
 
 import containersJson from "./json/containers.json";
 
-let renderer, scene, camera, controls, jarModel;
+let renderer, scene, camera, controls, banana, bananaShowing;
 var jellyBeanSims = {};
 var containerModels = {};
-const maxParticles = 23750;
 const containers = containersJson["containers"];
 const positions = containersJson["positions"];
+var currentContainerIndex = 0;
 
 var jellyBeansSetUp = false;
 var totalJellyBeans = 0;
@@ -34,7 +34,11 @@ const params = {
   gravityPull: -(9.81 * 9.81),
 };
 
-init();
+window.addEventListener("load", function () {
+  document.addEventListener("data-loaded", onDataLoaded);
+  init();
+});
+
 async function init() {
   renderer = new THREE.WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -55,6 +59,18 @@ async function init() {
     10
   );
   camera.position.set(-1.5, 0.75, -1.5);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  //controls.enableZoom = false;
+  controls.enablePan = false;
+  controls.enableRotate = true;
+  controls.maxPolarAngle = 1.1;
+  controls.minPolarAngle = 0.85;
+  controls.maxDistance = 3;
+  controls.minDistance = 0.6;
+  //controls.autoRotate = true;
+  controls.touches = { TWO: THREE.TOUCH.DOLLY_ROTATE };
+  controls.update();
 
   const rgbeLoader = new RGBELoader().setPath("");
 
@@ -95,19 +111,6 @@ async function init() {
 
   window.addEventListener("resize", onWindowResize);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-
-  controls.enableZoom = false;
-  controls.enablePan = false;
-  controls.enableRotate = true;
-  controls.maxPolarAngle = 1.1;
-  controls.minPolarAngle = 0.85;
-  controls.maxDistance = 3;
-  controls.minDistance = 0.6;
-  //controls.autoRotate = true;
-  controls.touches = { TWO: THREE.TOUCH.DOLLY_ROTATE };
-
-  controls.update();
   renderer.setAnimationLoop(render);
 
   document.addEventListener("answered-questions", onQuestionsAnswered);
@@ -124,6 +127,7 @@ async function init() {
   document.addEventListener("highlight-category", onHighlightCategory);
   document.addEventListener("unhighlight-category", onUnhighlightCategory);
   document.addEventListener("category-selected", onCategorySelected);
+  document.addEventListener("toggle-banana", toggleBanana);
 }
 
 function animateCameraZoom() {
@@ -132,24 +136,52 @@ function animateCameraZoom() {
     y: camera.position.y,
     z: camera.position.z,
   };
+  controls.enabled = false;
   new TWEEN.Tween(coords)
     .to({ x: -0.9, y: 0.6, z: -0.9 }, 2000)
     .onUpdate(() => camera.position.set(coords.x, coords.y, coords.z))
     .easing(TWEEN.Easing.Quadratic.InOut)
     .delay(800)
+    .onComplete(() => {
+      controls.enabled = true;
+    })
     .start();
 }
 
-function moveCameraToGroup(group, azimuth) {
-  console.log("recorded azimuth: " + azimuth);
+function moveCameraToGroup(
+  group,
+  index,
+  azimuth,
+  radius = -1,
+  polarAngle = -1
+) {
+  currentContainerIndex = index;
+  if (banana) {
+    var offset = group.container.bananaPosOffset;
+    banana.position.set(
+      group.position[0] + offset[0],
+      group.position[1] + offset[1],
+      group.position[2] + offset[2]
+    );
+  }
 
   var spherical = new THREE.Spherical();
+  var currAzimuth = controls.getAzimuthalAngle();
+  var r = radius == -1 ? 1.5 : radius;
+  var p = polarAngle == -1 ? 0.85 : polarAngle;
+
+  var distance = Math.abs(currAzimuth - azimuth);
+  if (distance > Math.abs(currAzimuth + 2 * Math.PI - azimuth)) {
+    currAzimuth += 2 * Math.PI;
+  } else if (distance > Math.abs(currAzimuth - 2 * Math.PI - azimuth)) {
+    currAzimuth -= 2 * Math.PI;
+  }
+
   spherical.radius = controls.getDistance();
   spherical.phi = controls.getPolarAngle();
-  spherical.theta = controls.getAzimuthalAngle();
-  console.log(controls.getPolarAngle());
+  spherical.theta = currAzimuth;
   var sphericalObj = {
-    a: controls.getAzimuthalAngle(),
+    a: currAzimuth,
     r: controls.getDistance(),
     p: controls.getPolarAngle(),
 
@@ -157,14 +189,16 @@ function moveCameraToGroup(group, azimuth) {
     y: controls.target.y,
     z: controls.target.z,
   };
-  var azimuthTween = new TWEEN.Tween(sphericalObj)
+
+  controls.enabled = false;
+  var cameraTween = new TWEEN.Tween(sphericalObj)
     .to(
       {
         a: azimuth,
-        r: 2.5,
-        p: 1.1,
+        r: r,
+        p: p,
         x: group.position[0],
-        y: group.position[1],
+        y: group.position[1] + 0.3,
         z: group.position[2],
       },
       2000
@@ -173,20 +207,25 @@ function moveCameraToGroup(group, azimuth) {
       spherical.theta = sphericalObj.a;
       spherical.radius = sphericalObj.r;
       spherical.phi = sphericalObj.p;
-      camera.position.setFromSpherical(spherical);
-      controls.target.set(sphericalObj.x, sphericalObj.y, sphericalObj.z);
+
+      // Create a temporary vector for the new camera position relative to target
+      const target = new THREE.Vector3(
+        sphericalObj.x,
+        sphericalObj.y,
+        sphericalObj.z
+      );
+      const newPos = new THREE.Vector3()
+        .setFromSpherical(spherical)
+        .add(target);
+
+      camera.position.copy(newPos);
+      controls.target.copy(target);
     })
-    .easing(TWEEN.Easing.Quadratic.InOut);
+    .onComplete(() => {
+      controls.enabled = true;
+    });
 
-  var targetTween = new TWEEN.Tween(controls.target)
-    .to(
-      { x: group.position[0], y: group.position[1], z: group.position[2] },
-      1000
-    )
-    .easing(TWEEN.Easing.Quadratic.InOut);
-
-  azimuthTween.start();
-  //targetTween.start();
+  cameraTween.start();
 }
 
 function onQuestionsAnswered() {
@@ -223,7 +262,7 @@ function showJellyBeans(
     group.setParticleCount(params.particleCount);
 
     if (index != 0) {
-      moveCameraToGroup(jellyBeanSims[0], pos[3]);
+      moveCameraToGroup(jellyBeanSims[index], index, pos[3]);
     }
 
     setTimeout(() => {
@@ -264,7 +303,6 @@ const highlightMat = new THREE.MeshPhysicalMaterial({
 });
 
 async function setUpContainer(c, p = [0, 0, 0]) {
-  console.log("Setting up " + c.id + " at " + p);
   return new Promise((resolve, reject) => {
     loader.load("public/" + c.file, async function (gltf) {
       var model = gltf.scene;
@@ -351,14 +389,18 @@ async function onCategorySet(e) {
       " and total left is " +
       totalJellyBeansLeft
   );
+  if (Object.keys(jellyBeanSims).length == 1) {
+    document.getElementById("container-title-0").style.display = "block";
+  }
 
   if (editedCategory) {
     jellyBeanSims[e.detail.index].setParticleCount(subamount);
   } else {
     var c = getContainer(subamount);
-    var p = getRandomPosition();
+    var p = positions[e.detail.index];
     var model = await setUpContainer(c, p);
     containerModels[e.detail.index] = model;
+    console.log("adding container ", c);
     showJellyBeans(e.detail.index, subamount, c, p);
   }
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
@@ -378,7 +420,7 @@ function onResetCategory(e) {
 
   totalJellyBeansLeft += amount;
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
-  moveCameraToGroup(0, 1.1);
+  moveCameraToGroup(jellyBeanSims[0], 0, -2.35, 1.4, 1.1);
 }
 
 function onHighlightCategory(e) {
@@ -408,8 +450,26 @@ function onUnhighlightCategory(e) {
 function onCategorySelected(e) {
   var group = jellyBeanSims[e.detail.index];
   if (group) {
-    moveCameraToGroup(group, group.position[3]);
+    if (e.detail.index == 0) {
+      moveCameraToGroup(group, 0, -2.35, 1.4, 1.1);
+    } else {
+      moveCameraToGroup(group, e.detail.index, group.position[3]);
+    }
   }
+}
+
+function onDataLoaded(e) {
+  console.log("days: " + e.detail.days);
+  document.getElementById("text-container").style.display = "none";
+  document.getElementById("categories").style.opacity = 1;
+  setTimeout(
+    () => (document.getElementById("container-label-0").style.opacity = 1),
+    1500
+  );
+  animateCameraZoom();
+  totalJellyBeans = e.detail.days;
+  totalJellyBeansLeft = e.detail.days;
+  showJellyBeans(0, -1, containers["jar"]);
 }
 
 var paused = false;
@@ -417,6 +477,16 @@ function setupInputs() {
   const onKeyDown = (e) => {
     console.log("azimuth: " + controls.getAzimuthalAngle());
     console.log("distance: " + controls.getDistance());
+    console.log("polar angle: " + controls.getPolarAngle());
+    console.log(containerModels, jellyBeanSims);
+    for (const [index, model] of Object.entries(containerModels)) {
+      console.log(
+        index,
+        jellyBeanSims[index].container,
+        jellyBeanSims[index].container.labelYOffset
+      );
+    }
+
     if (e.key == "s") {
       document.getElementById("text-container").style.display = "none";
       document.getElementById("categories").style.opacity = 1;
@@ -466,9 +536,55 @@ function toScreenPosition(obj) {
   };
 }
 
+async function toggleBanana() {
+  var group = jellyBeanSims[currentContainerIndex];
+  if (!banana) {
+    banana = await new Promise((resolve, reject) => {
+      loader.load("public/banana.glb", async function (gltf) {
+        let loader = new THREE.TextureLoader();
+        let map = loader.load("public/Banana_BaseColor.png");
+        let normalMap = loader.load("public/Banana_Normal.png");
+        let aoMap = loader.load("public/Banana_AO.png");
+        let roughnessMap = loader.load("public/Banana_Roughness.png");
+        let metallicMap = loader.load("public/Banana_Metallic.png");
+        const bananaMat = new THREE.MeshStandardMaterial({
+          map: map,
+          normalMap: normalMap,
+          aoMap: aoMap,
+          roughnessMap: roughnessMap,
+          metalnessMap: metallicMap,
+        });
+
+        var model = gltf.scene;
+        model.scale.set(2, 2, 2);
+
+        model.traverse((child) => {
+          if (child.isMesh) {
+            child.material = bananaMat;
+            child.castShadow = true;
+          }
+        });
+        scene.add(model);
+        resolve(model);
+      });
+    });
+  }
+  var offset = group.container.bananaPosOffset;
+  banana.position.set(
+    group.position[0] + offset[0],
+    group.position[1] + offset[1],
+    group.position[2] + offset[2]
+  );
+  bananaShowing = !bananaShowing;
+  banana.visible = bananaShowing;
+}
+
 async function render() {
   TWEEN.update();
   controls.update();
+  if (banana && banana.visible) {
+    banana.rotation.y += 0.004;
+  }
   if (!jellyBeansSetUp) {
     await renderer.renderAsync(scene, camera);
     return;
@@ -485,9 +601,12 @@ async function render() {
     screenPos.index = index;
     screenPos.yOffset =
       jellyBeanSims[index] &&
+      jellyBeanSims[index].container &&
       jellyBeanSims[index].container.labelYOffset != undefined
         ? jellyBeanSims[index].container.labelYOffset
         : 0;
+    console.log(index, screenPos.yOffset);
+    screenPos.percentage = (100 * screenPos.amount) / totalJellyBeans;
     containerData.push(screenPos);
   }
 

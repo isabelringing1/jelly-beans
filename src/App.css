@@ -400,7 +400,7 @@ input[type="number"] {
   width: 80%;
   text-align: center;
   line-height: 1.2;
-  padding-top: 1vh;
+  padding-top: 2vh;
 }
 
 .disclaimer:hover {
@@ -521,6 +521,26 @@ input[type="number"] {
   align-items: center;
   background-color: rgba(255, 255, 255, 0.7);
   color: #545454;
+  position: absolute;
+  bottom: 4.5vh;
+  right: 2vh;
+}
+
+.banana-switch {
+  position: absolute;
+  bottom: 4.5vh;
+  left: 3vh;
+  font-size: 2vh;
+  color: #545454;
+  pointer-events: all;
+}
+
+.banana-disclaimer {
+  color: red;
+  position: absolute;
+  bottom: 3vh;
+  left: 3vh;
+  font-size: 1.5vh;
 }
 
 #modal-container {
@@ -541,8 +561,7 @@ input[type="number"] {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 5vh;
   pointer-events: all;
-  width: 24vw;
-  min-height: 24vh;
+  width: 44vh;
   padding: 3vh 3vh;
   text-align: center;
   display: flex;
@@ -551,19 +570,25 @@ input[type="number"] {
   justify-content: center;
 }
 
+.modal-text-info {
+  font-size: 1.8vh !important;
+  text-align: left;
+}
+
 .modal-title {
   font-size: 3vh;
 }
 
 .modal-text-container {
-  height: 12vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 2vh 0;
 }
 
 .modal-text {
   font-size: 2vh;
+  padding: 1vh 0;
 }
 
 .modal-buttons-container {
@@ -571,6 +596,7 @@ input[type="number"] {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  padding-top: 2vh;
 }
 
 .modal-button {
@@ -578,4 +604,32 @@ input[type="number"] {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#button-CANCEL {
+  background-color: #c8c8c8;
+  filter: drop-shadow(0 0.3vh #777777ad);
+}
+
+#button-RESET {
+  background-color: #ff6d6d;
+  filter: drop-shadow(0 0.3vh #c11f1fbe);
+}
+
+button[id="button-START OVER"] {
+  background-color: #ff6d6d;
+  filter: drop-shadow(0 0.3vh #c11f1fbe);
+}
+
+#container-title-0 {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: #511cff;
+}
+
+a:hover {
+  color: #350abf;
 }

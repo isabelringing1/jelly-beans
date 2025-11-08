@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Switch from "@mui/material/Switch";
 import CategoryCard from "./CategoryCard";
 import Modal from "./Modal";
 
@@ -14,6 +15,7 @@ const Categories = (props) => {
   const [showError, setShowError] = useState(false);
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [modalMode, setModalMode] = useState("none"); // none, info
+  const [bananaChecked, setBananaChecked] = useState(false);
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -66,6 +68,22 @@ const Categories = (props) => {
           </div>
         )}
 
+        <div className="banana-switch">
+          Banana for Scale
+          <Switch
+            checked={bananaChecked}
+            onChange={() => {
+              setBananaChecked(!bananaChecked);
+              document.dispatchEvent(new CustomEvent("toggle-banana"));
+            }}
+          />
+        </div>
+        {bananaChecked && (
+          <div className="banana-disclaimer">
+            *Banana is a rough estimation!
+          </div>
+        )}
+
         <div className="column-buttons">
           <div
             className="column-button"
@@ -75,17 +93,24 @@ const Categories = (props) => {
           >
             Reset All
           </div>
+
           <div
-            className="info-button"
+            className="column-button"
             onClick={() => {
-              setModalMode("info");
+              setModalMode("start-over");
             }}
           >
-            ?
+            Start Over
           </div>
-          <div className="column-button">Start Over</div>
         </div>
-
+        <div
+          className="info-button"
+          onClick={() => {
+            setModalMode("info");
+          }}
+        >
+          ?
+        </div>
         <Modal modalMode={modalMode} setModalMode={setModalMode} />
       </div>
       <div className="column" id="column-3">

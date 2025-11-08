@@ -63,7 +63,7 @@
       "id": "tv",
       "index": 8,
       "title": "TV 📺",
-      "label": "Watching TV",
+      "label": "TV",
       "text": "How many hours a **week** do you spend watching TV?",
       "weekly": true
     },
@@ -79,7 +79,7 @@
   "other": [
     {
       "id": "main",
-      "title": "The Rest",
+      "label": "The Rest",
       "index": 0
     }
   ]

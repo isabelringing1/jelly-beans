@@ -156,6 +156,7 @@ const Input = (props) => {
               dropdownRef.current = e.target.value;
               onInputChange(e);
             }}
+            tabIndex="-1"
           >
             {options.map((option, i) => {
               return (
@@ -188,6 +189,7 @@ const Input = (props) => {
             id="next-button"
             onClick={onClicked}
             disabled={!isInputValid()}
+            tabIndex="-1"
           >
             {button}
           </button>

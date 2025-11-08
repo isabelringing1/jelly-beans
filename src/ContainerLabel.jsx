@@ -24,8 +24,9 @@ const ContainerLabel = (props) => {
         top: pos.y + offsetY + "px",
         left: pos.x + "px",
         height: 140 / pos.distance + "px",
-        width: 450 / pos.distance + "px",
+        width: 500 / pos.distance + "px",
         fontSize: 40 / pos.distance + "px",
+        opacity: pos.percentage > 0 ? 1 : 0,
       }}
       onClick={() => {
         document.dispatchEvent(
@@ -47,7 +48,10 @@ const ContainerLabel = (props) => {
       >
         {getTitle()}
       </div>
-      <div className="container-text"> {pos.amount.toLocaleString()} beans</div>
+      <div className="container-text">
+        {pos.amount.toLocaleString()} beans{" "}
+        {pos.percentage < 100 && <span>({pos.percentage.toFixed(2)}%)</span>}
+      </div>
       <div
         className={"container-tail" + (hover ? " tail-hover" : "")}
         style={{
