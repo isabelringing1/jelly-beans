@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     loadData();
-    fetch("/public/life_tables.csv")
+    fetch("./life_tables.csv")
       .then((response) => response.text())
       .then((lifeTables) => {
         initializeLifeTables(lifeTables);

@@ -582,7 +582,7 @@ class JellyBeanGroup {
 
     this.geometry.rotateX(3.14 / 2);
 
-    const threeTone = new THREE.TextureLoader().load("/public/threeTone.jpg");
+    const threeTone = new THREE.TextureLoader().load("./threeTone.jpg");
     threeTone.minFilter = THREE.NearestFilter;
     threeTone.magFilter = THREE.NearestFilter;
     var meshMaterial = new THREE.MeshToonMaterial({

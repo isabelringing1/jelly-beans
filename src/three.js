@@ -75,7 +75,7 @@ async function init() {
   const rgbeLoader = new RGBELoader().setPath("");
 
   const hdrTexture = await rgbeLoader.loadAsync(
-    "public/kloppenheim_06_puresky_4k.hdr"
+    "./kloppenheim_06_puresky_4k.hdr"
   );
   hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
   scene.background = new THREE.Color("rgba(175, 243, 255, 1)");
@@ -304,7 +304,7 @@ const highlightMat = new THREE.MeshPhysicalMaterial({
 
 async function setUpContainer(c, p = [0, 0, 0]) {
   return new Promise((resolve, reject) => {
-    loader.load("public/" + c.file, async function (gltf) {
+    loader.load("./" + c.file, async function (gltf) {
       var model = gltf.scene;
       model.scale.set(c.scale[0], c.scale[1], c.scale[2]);
       model.position.set(p[0], p[1], p[2]);
@@ -341,24 +341,6 @@ function getRandomPosition() {
   positions.splice(index, 1);
   console.log(position, positions);
   return position;
-}
-
-function setUpTest() {
-  const threeTone = new THREE.TextureLoader().load("/public/threeTone.jpg");
-  threeTone.minFilter = THREE.NearestFilter;
-  threeTone.magFilter = THREE.NearestFilter;
-  var meshMaterial = new THREE.MeshToonMaterial({
-    color: 0xffffff,
-    map: threeTone,
-    side: THREE.FrontSide,
-  });
-
-  var capsule = new THREE.CapsuleGeometry(0.005, 0.005, 4, 8);
-  var geometry = BufferGeometryUtils.mergeVertices(capsule);
-
-  geometry.rotateX(3.14 / 2);
-  var particleMesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial());
-  scene.add(particleMesh);
 }
 
 async function onCategorySet(e) {
@@ -540,13 +522,13 @@ async function toggleBanana() {
   var group = jellyBeanSims[currentContainerIndex];
   if (!banana) {
     banana = await new Promise((resolve, reject) => {
-      loader.load("public/banana.glb", async function (gltf) {
+      loader.load("./banana.glb", async function (gltf) {
         let loader = new THREE.TextureLoader();
-        let map = loader.load("public/Banana_BaseColor.png");
-        let normalMap = loader.load("public/Banana_Normal.png");
-        let aoMap = loader.load("public/Banana_AO.png");
-        let roughnessMap = loader.load("public/Banana_Roughness.png");
-        let metallicMap = loader.load("public/Banana_Metallic.png");
+        let map = loader.load("./Banana_BaseColor.png");
+        let normalMap = loader.load("./Banana_Normal.png");
+        let aoMap = loader.load("./Banana_AO.png");
+        let roughnessMap = loader.load("./Banana_Roughness.png");
+        let metallicMap = loader.load("./Banana_Metallic.png");
         const bananaMat = new THREE.MeshStandardMaterial({
           map: map,
           normalMap: normalMap,
