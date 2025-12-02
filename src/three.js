@@ -101,8 +101,10 @@ async function init() {
   plane.receiveShadow = true;
   scene.add(plane);
 
+  console.log("before jar " + Date.now());
   var jarModel = await setUpContainer(containers["jar"], [0, -0.17, 0]);
   containerModels[0] = jarModel;
+  console.log("after jar " + Date.now());
 
   //setUpTest();
 
