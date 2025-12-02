@@ -9,6 +9,8 @@ const App = () => {
   const [showCategories, setShowCategories] = useState(false);
   const [wildcardCategory, setWildcardCategory] = useState("gaming");
   const [days, setDays] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -17,6 +19,12 @@ const App = () => {
       .then((lifeTables) => {
         initializeLifeTables(lifeTables);
       });
+    document.addEventListener("three-loaded", () => {
+      setLoaded(true);
+    });
+    setTimeout(() => {
+      setShowWarning(true);
+    }, 3000);
   }, []);
 
   useEffect(() => {
@@ -59,12 +67,38 @@ const App = () => {
         setShowCategories={setShowCategories}
         days={days}
         setDays={setDays}
+        loaded={loaded}
+        showWarning={showWarning}
       />
       <ContainerLabels wildcardCategory={wildcardCategory} />
       <Categories
         show={showCategories}
         setWildcardCategory={setWildcardCategory}
       />
+      {showWarning && (
+        <div className="warning-container">
+          <div className="warning">
+            <div className="warning-title">Not seeing anything?</div>
+            <div className="warning-text">
+              Your browser may not support WebGPU yet.
+            </div>
+            <div className="warning-text">
+              Please switch or update your browser to play.
+            </div>
+            <div className="warning-text">
+              (Chrome or Edge will usually work.)
+            </div>
+            <div className="warning-text">
+              <a
+                href="https://web.dev/blog/webgpu-supported-major-browsers"
+                target="_blank"
+              >
+                Read More
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

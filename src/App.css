@@ -11,7 +11,6 @@ body {
   height: 100vh;
   background-color: rgb(0, 0, 0, 0);
   position: absolute;
-  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,6 +37,7 @@ canvas {
   top: 0;
   transition: top 0.6s cubic-bezier(0.65, 0, 0.35, 1);
   pointer-events: all;
+  z-index: 1;
 }
 
 .card-container {
@@ -224,6 +224,7 @@ input[type="number"] {
   display: flex;
   justify-content: space-between;
   transition: opacity 1s ease-in-out;
+  z-index: 1;
 }
 
 .column {
@@ -632,4 +633,33 @@ a {
 
 a:hover {
   color: #350abf;
+}
+
+.warning-container {
+  position: absolute;
+  width: 100vw;
+  height: 30vh;
+  bottom: 0vh;
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  z-index: 0;
+  pointer-events: all;
+}
+
+.warning {
+  margin-left: 4vh;
+  padding: 2vh;
+  border-radius: 2vh;
+  background-color: rgba(175, 243, 255, 1);
+  text-align: center;
+}
+
+.warning-title {
+  font-size: 2.4vh;
+  padding-bottom: 1vh;
+}
+
+.warning-text {
+  padding-bottom: 1vh;
 }

@@ -5,7 +5,14 @@ import instructions from "./json/instructions.json";
 import { getDaysLeft } from "./util/TimeCalculator.js";
 
 const TextContainer = (props) => {
-  const { userParams, setUserParams, setShowCategories, days, setDays } = props;
+  const {
+    userParams,
+    setUserParams,
+    setShowCategories,
+    days,
+    setDays,
+    loaded,
+  } = props;
   const [currentSequence, setCurrentSequence] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   var isAnimating = useRef(false);
@@ -90,7 +97,10 @@ const TextContainer = (props) => {
       id="text-container"
       onClick={onTextContainerClicked}
       onWheel={onScroll}
-      style={{ top: -100 * currentCardIndex + "vh" }}
+      style={{
+        top: -100 * currentCardIndex + "vh",
+        pointerEvents: loaded ? "auto" : "none",
+      }}
     >
       {currentSequence.cards &&
         currentSequence.cards.map((card, i) => {
@@ -104,6 +114,7 @@ const TextContainer = (props) => {
               userParams={userParams}
               setUserParams={setUserParams}
               days={days}
+              loaded={loaded}
             />
           );
         })}

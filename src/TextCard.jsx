@@ -4,8 +4,16 @@ import Input from "./Input.jsx";
 import DownArrow from "/down-arrow.png";
 
 const TextCard = (props) => {
-  const { card, onButtonClicked, id, index, userParams, setUserParams, days } =
-    props;
+  const {
+    card,
+    onButtonClicked,
+    id,
+    index,
+    userParams,
+    setUserParams,
+    days,
+    loaded,
+  } = props;
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
 
@@ -69,12 +77,13 @@ const TextCard = (props) => {
         {card.button && !card.input && (
           <div id="button-container">
             <button
-              className="button"
+              className={"button " + (loaded ? "" : " disabled")}
+              disabled={!loaded}
               id="next-button"
               onClick={onButtonClicked}
               tabIndex="-1"
             >
-              {card.button}
+              {loaded ? card.button : "LOADING..."}
             </button>
           </div>
         )}

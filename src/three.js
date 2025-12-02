@@ -21,6 +21,8 @@ var currentContainerIndex = 0;
 var jellyBeansSetUp = false;
 var totalJellyBeans = 0;
 var totalJellyBeansLeft = 0;
+var manager = null;
+var gltfLoader = null;
 
 if (WebGPU.isAvailable() === false) {
   document.body.appendChild(WebGPU.getErrorMessage());
@@ -72,7 +74,14 @@ async function init() {
   controls.touches = { TWO: THREE.TOUCH.DOLLY_ROTATE };
   controls.update();
 
-  const rgbeLoader = new RGBELoader().setPath("");
+  manager = new THREE.LoadingManager();
+  manager.onLoad = () => {
+    console.log("Loading complete!");
+    document.dispatchEvent(new CustomEvent("three-loaded"));
+  };
+
+  const rgbeLoader = new RGBELoader(manager).setPath("");
+  gltfLoader = new GLTFLoader(manager);
 
   const hdrTexture = await rgbeLoader.loadAsync(
     "./kloppenheim_06_puresky_4k.hdr"
@@ -271,7 +280,6 @@ function showJellyBeans(
   }, 1000);
 }
 
-const loader = new GLTFLoader();
 const glassMat = new THREE.MeshPhysicalMaterial({
   color: 0xffffff,
   metalness: 0.04,
@@ -304,7 +312,7 @@ const highlightMat = new THREE.MeshPhysicalMaterial({
 
 async function setUpContainer(c, p = [0, 0, 0]) {
   return new Promise((resolve, reject) => {
-    loader.load("./" + c.file, async function (gltf) {
+    gltfLoader.load("./" + c.file, async function (gltf) {
       var model = gltf.scene;
       model.scale.set(c.scale[0], c.scale[1], c.scale[2]);
       model.position.set(p[0], p[1], p[2]);
@@ -523,12 +531,12 @@ async function toggleBanana() {
   if (!banana) {
     banana = await new Promise((resolve, reject) => {
       loader.load("./banana.glb", async function (gltf) {
-        let loader = new THREE.TextureLoader();
-        let map = loader.load("./Banana_BaseColor.png");
-        let normalMap = loader.load("./Banana_Normal.png");
-        let aoMap = loader.load("./Banana_AO.png");
-        let roughnessMap = loader.load("./Banana_Roughness.png");
-        let metallicMap = loader.load("./Banana_Metallic.png");
+        let textureLoader = new THREE.TextureLoader(manager);
+        let map = textureLoader.load("./Banana_BaseColor.png");
+        let normalMap = textureLoader.load("./Banana_Normal.png");
+        let aoMap = textureLoader.load("./Banana_AO.png");
+        let roughnessMap = textureLoader.load("./Banana_Roughness.png");
+        let metallicMap = textureLoader.load("./Banana_Metallic.png");
         const bananaMat = new THREE.MeshStandardMaterial({
           map: map,
           normalMap: normalMap,
