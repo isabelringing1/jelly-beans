@@ -35,8 +35,9 @@ const params = {
   particleCount: 23750,
   gravityPull: -(9.81 * 9.81),
 };
-
+console.log(window);
 window.addEventListener("load", function () {
+  console.log("window loaded");
   document.addEventListener("data-loaded", onDataLoaded);
   init();
 });
@@ -532,7 +533,7 @@ async function toggleBanana() {
   var group = jellyBeanSims[currentContainerIndex];
   if (!banana) {
     banana = await new Promise((resolve, reject) => {
-      loader.load("./banana.glb", async function (gltf) {
+      gltfLoader.load("./banana.glb", async function (gltf) {
         let textureLoader = new THREE.TextureLoader(manager);
         let map = textureLoader.load("./Banana_BaseColor.png");
         let normalMap = textureLoader.load("./Banana_Normal.png");
