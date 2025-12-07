@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const Input = (props) => {
   const {
@@ -11,6 +11,8 @@ const Input = (props) => {
     button,
     long,
   } = props;
+
+  var [started, setStarted] = useState(false);
 
   var monthRef = useRef(null);
   var dayRef = useRef(null);
@@ -30,9 +32,7 @@ const Input = (props) => {
   }, []);
 
   const onlyNumbers = (e) => {
-    if (!/[0-9]/.test(e.key)) {
-      e.preventDefault();
-    }
+    return /[0-9]/.test(e);
   };
 
   const onClicked = (e) => {
@@ -41,6 +41,7 @@ const Input = (props) => {
 
   const onInputChange = (e) => {
     var newUserParams = { ...userParams };
+    setStarted(true);
     if (id == "birth-date") {
       console.log(e.target.id, e.nativeEvent.inputTpe);
       newUserParams["month"] = monthRef.current.value;
@@ -97,6 +98,9 @@ const Input = (props) => {
           yearRef.current.value
         )
       );
+    }
+    if (type == "number") {
+      return numberRef.current && onlyNumbers(numberRef.current.value);
     }
     return true;
   };
@@ -180,12 +184,14 @@ const Input = (props) => {
         />
       )}
 
-      {!isInputValid() && <div id="input-error">{getInputError()}</div>}
+      {!isInputValid() && started && (
+        <div id="input-error">{getInputError()}</div>
+      )}
 
       {button && (
         <div id="button-container">
           <button
-            className="button"
+            className={"button " + (isInputValid() ? "" : "disabled")}
             id="next-button"
             onClick={onClicked}
             disabled={!isInputValid()}

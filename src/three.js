@@ -39,9 +39,8 @@ console.log(window);
 window.addEventListener("load", function () {
   console.log("window loaded");
   document.addEventListener("data-loaded", onDataLoaded);
-  init();
 });
-
+init();
 async function init() {
   renderer = new THREE.WebGPURenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -88,7 +87,7 @@ async function init() {
     "./kloppenheim_06_puresky_4k.hdr"
   );
   hdrTexture.mapping = THREE.EquirectangularReflectionMapping;
-  scene.background = new THREE.Color("rgba(175, 243, 255, 1)");
+  scene.background = new THREE.Color("rgba(146, 239, 255, 1)");
 
   scene.backgroundBlurriness = 0.5;
   scene.environment = hdrTexture;
@@ -102,10 +101,8 @@ async function init() {
   plane.receiveShadow = true;
   scene.add(plane);
 
-  console.log("before jar " + Date.now());
   var jarModel = await setUpContainer(containers["jar"], [0, -0.17, 0]);
   containerModels[0] = jarModel;
-  console.log("after jar " + Date.now());
 
   //setUpTest();
 
@@ -317,6 +314,7 @@ async function setUpContainer(c, p = [0, 0, 0]) {
   return new Promise((resolve, reject) => {
     gltfLoader.load("./" + c.file, async function (gltf) {
       var model = gltf.scene;
+      model.def = c;
       model.scale.set(c.scale[0], c.scale[1], c.scale[2]);
       model.position.set(p[0], p[1], p[2]);
       model.castShadow = true;
@@ -346,16 +344,7 @@ function getContainer(amt) {
   return potential[Math.floor(Math.random() * potential.length)];
 }
 
-function getRandomPosition() {
-  var index = Math.floor(Math.random() * positions.length);
-  var position = positions[index];
-  positions.splice(index, 1);
-  console.log(position, positions);
-  return position;
-}
-
 async function onCategorySet(e) {
-  console.log(totalJellyBeans, e.detail.percent);
   var subamount = Math.round(totalJellyBeans * e.detail.percent);
   var editedCategory = e.detail.index in jellyBeanSims;
 
@@ -372,25 +361,27 @@ async function onCategorySet(e) {
     return;
   }
 
-  console.log(
-    "cat " +
-      e.detail.index +
-      " is " +
-      e.detail.percent * 100 +
-      " % for total of " +
-      subamount +
-      " and total left is " +
-      totalJellyBeansLeft
-  );
   if (Object.keys(jellyBeanSims).length == 1) {
     document.getElementById("container-title-0").style.display = "block";
   }
 
   if (editedCategory) {
-    jellyBeanSims[e.detail.index].setParticleCount(subamount);
+    var container = containerModels[e.detail.index];
+    console.log(subamount, container.def.max, container.def.min);
+    if (subamount > container.def.max || subamount < container.def.min) {
+      scene.remove(container);
+      scene.remove(jellyBeanSims[e.detail.index].particleMesh);
+      var c = getContainer(subamount);
+      var p = positions[e.detail.index - 1];
+      var model = await setUpContainer(c, p);
+      containerModels[e.detail.index] = model;
+      showJellyBeans(e.detail.index, subamount, c, p);
+    } else {
+      jellyBeanSims[e.detail.index].setParticleCount(subamount);
+    }
   } else {
     var c = getContainer(subamount);
-    var p = positions[e.detail.index];
+    var p = positions[e.detail.index - 1];
     var model = await setUpContainer(c, p);
     containerModels[e.detail.index] = model;
     console.log("adding container ", c);
@@ -466,19 +457,13 @@ function onDataLoaded(e) {
 }
 
 var paused = false;
+
 function setupInputs() {
   const onKeyDown = (e) => {
     console.log("azimuth: " + controls.getAzimuthalAngle());
     console.log("distance: " + controls.getDistance());
     console.log("polar angle: " + controls.getPolarAngle());
     console.log(containerModels, jellyBeanSims);
-    for (const [index, model] of Object.entries(containerModels)) {
-      console.log(
-        index,
-        jellyBeanSims[index].container,
-        jellyBeanSims[index].container.labelYOffset
-      );
-    }
 
     if (e.key == "s") {
       document.getElementById("text-container").style.display = "none";
@@ -598,7 +583,6 @@ async function render() {
       jellyBeanSims[index].container.labelYOffset != undefined
         ? jellyBeanSims[index].container.labelYOffset
         : 0;
-    console.log(index, screenPos.yOffset);
     screenPos.percentage = (100 * screenPos.amount) / totalJellyBeans;
     containerData.push(screenPos);
   }

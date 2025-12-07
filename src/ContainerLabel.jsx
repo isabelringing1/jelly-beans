@@ -3,7 +3,7 @@ import { useState } from "react";
 const ContainerLabel = (props) => {
   const { pos, category, wildcardCategory } = props;
   const [hover, setHover] = useState(false);
-  var offsetY = (-window.innerHeight + pos.yOffset) / (pos.distance * 1.1);
+  var offsetY = (window.innerHeight * pos.yOffset) / (pos.distance * 1.1);
 
   const getTitle = () => {
     if (!category) {
@@ -26,7 +26,7 @@ const ContainerLabel = (props) => {
         height: 140 / pos.distance + "px",
         width: 500 / pos.distance + "px",
         fontSize: 40 / pos.distance + "px",
-        opacity: pos.percentage > 0 ? 1 : 0,
+        display: pos.percentage > 0 ? "flex" : "none",
       }}
       onClick={() => {
         document.dispatchEvent(

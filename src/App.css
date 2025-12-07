@@ -6,6 +6,11 @@ body {
   overflow: hidden;
 }
 
+@font-face {
+  font-family: readex-pro;
+  src: url("ReadexPro-Regular.ttf");
+}
+
 #react-root {
   width: 100vw;
   height: 100vh;
@@ -219,6 +224,7 @@ input[type="number"] {
 }
 
 #categories {
+  position: absolute;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -242,10 +248,19 @@ input[type="number"] {
   display: none; /* Older Safari and Chromium */
 }
 
+#column-1 {
+  padding-bottom: 20vh;
+}
+
+#column-3 {
+  padding-bottom: 20vh;
+}
+
 #column-2 {
   display: flex;
   flex-direction: column;
   justify-content: start;
+  z-index: 3;
 }
 
 .column-2-text {
@@ -514,6 +529,7 @@ input[type="number"] {
   margin: 0 2vh;
   width: 1vh;
   height: 1vh;
+  z-index: 2;
   border-radius: 5vh;
   pointer-events: all;
   cursor: pointer;
@@ -529,7 +545,7 @@ input[type="number"] {
 
 .banana-switch {
   position: absolute;
-  bottom: 4.5vh;
+  bottom: 7.5vh;
   left: 3vh;
   font-size: 2vh;
   color: #545454;
@@ -539,7 +555,7 @@ input[type="number"] {
 .banana-disclaimer {
   color: red;
   position: absolute;
-  bottom: 3vh;
+  bottom: 6vh;
   left: 3vh;
   font-size: 1.5vh;
 }
@@ -559,7 +575,7 @@ input[type="number"] {
 }
 
 #modal {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5vh;
   pointer-events: all;
   width: 44vh;
@@ -662,4 +678,24 @@ a:hover {
 
 .warning-text {
   padding-bottom: 1vh;
+}
+
+.isabisabel {
+  font-family: readex-pro;
+  font-size: 3vh;
+  position: absolute;
+  bottom: 2vh;
+  left: 3vh;
+  z-index: 2;
+  color: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.flower {
+  padding-top: 0.5vh;
+  padding-left: 3px;
+  height: 1em;
+  vertical-align: text-top;
+  opacity: 0.9;
 }

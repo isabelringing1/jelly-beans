@@ -8,7 +8,8 @@
       },
       {
         "texts": [
-          "Hey there. Have you ever wondered how much time you have left to live?"
+          "Hey there.",
+          "Have you ever wondered how many days you have left to live?"
         ]
       },
       {
@@ -19,7 +20,7 @@
       },
       {
         "texts": [
-          "Hi, I'm Isabel. Lately, I've been thinking about how much time I have left to live.",
+          "Hi, I'm Isabel. Lately, I've been thinking about how much time I have left.",
           "Maybe you have too."
         ]
       },
@@ -46,7 +47,7 @@
         "input": "dropdown",
         "options": ["Male", "Female", "Other", "Prefer not to say"],
         "button": "CONFIRM",
-        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to continue."
+        "disclaimer": "This data is used for more accurate results and won't be saved. If you don't want to share, you can pick 'Prefer not to say'."
       },
       {
         "id": "race",
@@ -62,7 +63,7 @@
           "Prefer not to say"
         ],
         "button": "Confirm",
-        "disclaimer": "This data is used for more accurate results and won't be saved. You don't need to share to continue."
+        "disclaimer": "This data is used for more accurate results and won't be saved. If you don't want to share, you can pick 'Prefer not to say'."
       },
       {
         "hidden": true
@@ -73,13 +74,13 @@
       },
       {
         "texts": [
-          "Now, let's imagine we could fill this jar with jelly beans, where one jelly bean is equivalent to **one day** of your life."
+          "Now, let's say one jelly bean is equivalent to **one day** of the rest of your life."
         ],
         "bottom": true
       },
       {
         "id": "pre-reveal",
-        "texts": ["What would that look like?"],
+        "texts": ["How many would fill this jar?"],
         "button": "SHOW ME",
         "bottom": true
       },
@@ -95,7 +96,7 @@
         "bottom": true
       },
       {
-        "texts": ["How many jelly beans do you think are in this jar?"],
+        "texts": ["How many jelly beans are in the jar?"],
         "input": "number",
         "long": true,
         "button": "GUESS",
@@ -104,33 +105,29 @@
       },
       {
         "texts": [
-          "Good guess! Here's the actual amount...",
-          "(You were just [OFF]% off)"
+          "Good guess! You were just [OFF] beans off. ",
+          "Here's the actual amount..."
         ],
         "bottom": true
       },
       {
-        "texts": ["Is it daunting to see your life laid like this?"],
+        "texts": ["Is it daunting to see your life laid out like this?"],
         "bottom": true
       },
       {
-        "texts": ["If so, you're not alone."],
+        "texts": ["You're not alone.", "I think it's helpful to remember..."],
         "bottom": true
       },
       {
         "texts": [
-          "When I get too spooked, I think it's helpful to remember..."
+          "You might not be able to control the time you have left, but you're in charge of **how you spend it**."
         ],
-        "bottom": true
-      },
-      {
-        "texts": ["**You're in charge of how you spend your days**."],
         "bottom": true
       },
       {
         "id": "show-categories",
         "texts": [
-          "With that in mind, let's explore the various ways you can break down your life."
+          "With that in mind, let's explore different ways you can break down your life."
         ],
         "button": "START",
         "bottom": true

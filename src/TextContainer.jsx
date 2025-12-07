@@ -37,13 +37,16 @@ const TextContainer = (props) => {
   };
 
   const onTextContainerClicked = () => {
-    if (currentSequence.cards[currentCardIndex].button) {
+    if (currentSequence.cards[currentCardIndex].button || isAnimating.current) {
       return;
     }
     processCard();
   };
 
   const onButtonClicked = () => {
+    if (isAnimating.current) {
+      return;
+    }
     processCard();
   };
 
@@ -56,9 +59,10 @@ const TextContainer = (props) => {
       var d = getDaysLeft(userParams);
       console.log("calculated days: " + d);
       setDays(d);
-      nextCard(); // will be empty
+      nextCard(false); // will be empty
       setTimeout(() => {
         setCurrentCardIndex(currentCardIndex + 2); //so hacky
+        isAnimating.current = false;
       }, 2500);
       return;
     }
@@ -66,9 +70,10 @@ const TextContainer = (props) => {
       document.dispatchEvent(
         new CustomEvent("show-jelly-beans", { detail: { days: days } })
       );
-      nextCard(); // will be empty
+      nextCard(false); // will be empty
       setTimeout(() => {
         setCurrentCardIndex(currentCardIndex + 2); //so hacky
+        isAnimating.current = false;
       }, 6000);
       return;
     }
@@ -78,18 +83,20 @@ const TextContainer = (props) => {
     if (card.id == "guess") {
       setTimeout(() => {
         document.getElementById("container-label-0").style.opacity = 1;
-      }, 1500);
+      }, 1000);
     }
 
     nextCard();
   };
 
-  const nextCard = () => {
+  const nextCard = (shouldSetTimeout = true) => {
     setCurrentCardIndex(currentCardIndex + 1);
     isAnimating.current = true;
-    setTimeout(() => {
-      isAnimating.current = false;
-    }, 600);
+    if (shouldSetTimeout) {
+      setTimeout(() => {
+        isAnimating.current = false;
+      }, 600);
+    }
   };
 
   return (

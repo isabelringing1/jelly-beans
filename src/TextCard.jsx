@@ -35,20 +35,11 @@ const TextCard = (props) => {
     }
     if (text.includes("[OFF]")) {
       var guess = userParams.guess ?? 0;
-      var percentOff = getPercentOff(days, guess);
-      text = text.replace(
-        "[OFF]",
-        Math.abs(percentOff.toFixed(2).toLocaleString())
-      );
+      var daysOff = Math.abs(days - parseInt(guess));
+      text = text.replace("[OFF]", daysOff.toLocaleString());
     }
     return text;
   };
-
-  function getPercentOff(v0, v1) {
-    if (v0 === 0) return 0; // avoid division by zero
-    const percentOff = ((v0 - v1) / v0) * 100;
-    return percentOff;
-  }
 
   return (
     <div className="card-container" style={{ top: index * 100 + "vh" }}>
@@ -92,7 +83,7 @@ const TextCard = (props) => {
             className={"disclaimer " + (showDisclaimer ? "shown" : "")}
             onClick={onDisclaimerClicked}
           >
-            {showDisclaimer ? card.disclaimer : "Why do you need this?"}
+            {showDisclaimer ? card.disclaimer : "Why is this needed?"}
           </div>
         )}
         {!card.button && <img className="down-arrow" src={DownArrow} />}

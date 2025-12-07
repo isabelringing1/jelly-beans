@@ -3,6 +3,7 @@ import TextContainer from "./TextContainer.jsx";
 import Categories from "./Categories.jsx";
 import ContainerLabels from "./ContainerLabels.jsx";
 import { initializeLifeTables } from "./util/TimeCalculator.js";
+import flower from "/flower.png";
 
 const App = () => {
   const [userParams, setUserParams] = useState({});
@@ -61,6 +62,15 @@ const App = () => {
 
   return (
     <div id="content">
+      <div
+        className="isabisabel"
+        onClick={() => {
+          window.open("https://isabisabel.com", "_blank").focus();
+        }}
+      >
+        isabisabel
+        <img className="flower" src={flower} />
+      </div>
       <TextContainer
         userParams={userParams}
         setUserParams={setUserParams}
@@ -86,7 +96,7 @@ const App = () => {
               Please switch or update your browser to play.
             </div>
             <div className="warning-text">
-              (Chrome or Edge will usually work.)
+              (Refreshing the page may also help.)
             </div>
             <div className="warning-text">
               <a
