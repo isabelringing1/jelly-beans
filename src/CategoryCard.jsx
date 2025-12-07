@@ -71,7 +71,6 @@ const CategoryCard = (props) => {
   };
 
   const onInputChange = (e) => {
-    console.log(e);
     var isValid = isInputValid(e.target.value);
     setValidInput(isValid);
     setInput(e.target.value);
@@ -112,7 +111,6 @@ const CategoryCard = (props) => {
       console.log("Error calculating percent, returning 0");
       return 0;
     }
-    console.log(diyRef.current);
     if (diyRef.current == "week") {
       return input / (24 * 7);
     } else if (diyRef.current == "day") {
@@ -184,9 +182,6 @@ const CategoryCard = (props) => {
           <select
             name="selectedOption"
             className="select-input prompt-select-input prompt-text"
-            onChange={(e) => {
-              console.log(e.target.value);
-            }}
           >
             <option className="prompt-option" value="week">
               week

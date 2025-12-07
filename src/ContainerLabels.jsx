@@ -21,7 +21,6 @@ const ContainerLabels = (props) => {
       newCatDict[categories["other"][i].index] = categories["other"][i];
     }
     setCatDict(newCatDict);
-    console.log(newCatDict);
   }, []);
 
   const onScreenDataEvent = (e) => {

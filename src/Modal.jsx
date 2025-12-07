@@ -56,7 +56,6 @@ const Modal = (props) => {
       id="modal-container"
       className={modalMode == "none" ? "hidden" : ""}
       onClick={(e) => {
-        console.log(e.target.id);
         if (e.target.id == "modal-container") {
           closeModal();
         }

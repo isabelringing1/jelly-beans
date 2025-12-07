@@ -34,8 +34,6 @@ function initializeLifeTables(csv) {
 }
 
 function getDaysLeft(parameters) {
-  console.log(parameters);
-
   var now = new Date(); // current date
   var birth = new Date(
     parameters.month + "/" + parameters.day + "/" + parameters.year
@@ -50,9 +48,7 @@ function getDaysLeft(parameters) {
     age = 100;
   }
   var lifeExpectancies = lifeTableDict[age];
-  console.log(lifeExpectancies);
   var index = getDemographicIndex(parameters);
-  console.log("demographic index is " + index);
   return Math.floor(lifeExpectancies[index] * 365.25);
 }
 

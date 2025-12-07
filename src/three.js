@@ -35,11 +35,7 @@ const params = {
   particleCount: 23750,
   gravityPull: -(9.81 * 9.81),
 };
-console.log(window);
-window.addEventListener("load", function () {
-  console.log("window loaded");
-  document.addEventListener("data-loaded", onDataLoaded);
-});
+document.addEventListener("data-loaded", onDataLoaded);
 init();
 async function init() {
   renderer = new THREE.WebGPURenderer({ antialias: true });
@@ -76,7 +72,6 @@ async function init() {
 
   manager = new THREE.LoadingManager();
   manager.onLoad = () => {
-    console.log("Loading complete!");
     document.dispatchEvent(new CustomEvent("three-loaded"));
   };
 
@@ -116,7 +111,7 @@ async function init() {
 
   scene.add(light);
 
-  setupInputs();
+  //setupInputs();
 
   window.addEventListener("resize", onWindowResize);
 
@@ -384,15 +379,12 @@ async function onCategorySet(e) {
     var p = positions[e.detail.index - 1];
     var model = await setUpContainer(c, p);
     containerModels[e.detail.index] = model;
-    console.log("adding container ", c);
     showJellyBeans(e.detail.index, subamount, c, p);
   }
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
 }
 
 function onResetCategory(e) {
-  console.log("resetting category " + e.detail.index);
-
   var model = containerModels[e.detail.index];
   var jellyBeanSim = jellyBeanSims[e.detail.index];
   if (jellyBeanSim == null) return;

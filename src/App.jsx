@@ -35,7 +35,6 @@ const App = () => {
   }, [days]);
 
   function saveData() {
-    console.log("Saving total days " + days);
     var newPlayerData = { days: days };
     var saveString = JSON.stringify(newPlayerData);
     localStorage.setItem("jelly-beans", window.btoa(saveString));
@@ -46,7 +45,6 @@ const App = () => {
     if (saveData != null) {
       try {
         saveData = JSON.parse(window.atob(saveData));
-        console.log("emitting data loaded");
         document.dispatchEvent(
           new CustomEvent("data-loaded", {
             detail: { days: saveData.days },

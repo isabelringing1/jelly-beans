@@ -57,7 +57,6 @@ const TextContainer = (props) => {
         new Event("answered-questions", { bubbles: true })
       );
       var d = getDaysLeft(userParams);
-      console.log("calculated days: " + d);
       setDays(d);
       nextCard(false); // will be empty
       setTimeout(() => {
