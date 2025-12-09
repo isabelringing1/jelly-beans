@@ -4,7 +4,9 @@
       {
         "title": "Your Life in Jelly Beans",
         "subtitle": "An interactive exploration about candy and the rest of your days.",
-        "button": "START"
+        "button": "START",
+        "subtext": "by Isabel Lee",
+        "mobile": "This experience does not work on this screen size right now, sorry! Please revist on desktop."
       },
       {
         "texts": [

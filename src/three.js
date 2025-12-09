@@ -1,7 +1,6 @@
 import * as THREE from "three/webgpu";
 import * as TWEEN from "https://unpkg.com/@tweenjs/tween.js@23.1.3/dist/tween.esm.js";
 
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import { OrbitControls } from "three-stdlib";
 import { RGBELoader } from "three/addons/loaders/RGBELoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
@@ -28,8 +27,6 @@ if (WebGPU.isAvailable() === false) {
   document.body.appendChild(WebGPU.getErrorMessage());
   throw new Error("No WebGPU support");
 }
-
-//const gui = new GUI();
 
 const params = {
   particleCount: 23750,
@@ -194,6 +191,8 @@ function moveCameraToGroup(
     z: controls.target.z,
   };
 
+  var yOffset = index == 0 ? 0 : 0.3;
+
   controls.enabled = false;
   var cameraTween = new TWEEN.Tween(sphericalObj)
     .to(
@@ -202,7 +201,7 @@ function moveCameraToGroup(
         r: r,
         p: p,
         x: group.position[0],
-        y: group.position[1] + 0.3,
+        y: group.position[1] + yOffset,
         z: group.position[2],
       },
       2000
@@ -256,11 +255,6 @@ function showJellyBeans(
       gridSize
     );
     jellyBeanSims[index] = group;
-    /*gui
-      .add(params, "particleCount", 100, maxParticles, 10)
-      .onChange((value) => {
-        group.setParticleCount(value);
-      });*/
     jellyBeansSetUp = true;
     controls.autoRotate = false;
     group.setParticleCount(params.particleCount);
@@ -291,7 +285,7 @@ const glassMat = new THREE.MeshPhysicalMaterial({
 });
 
 const highlightMat = new THREE.MeshPhysicalMaterial({
-  color: 0xffedab,
+  color: 0xfff6d6,
   metalness: 0.04,
   roughness: 0.08,
   ior: 1.25,
@@ -299,7 +293,7 @@ const highlightMat = new THREE.MeshPhysicalMaterial({
   //envMapIntensity: 1,
   transmission: 1, // use material.transmission for glass materials
   specularIntensity: 1,
-  specularColor: 0xffedab,
+  specularColor: 0xfff6d6,
   opacity: 1,
   side: THREE.DoubleSide,
   transparent: true,
@@ -396,7 +390,7 @@ function onResetCategory(e) {
 
   totalJellyBeansLeft += amount;
   jellyBeanSims[0].setParticleCount(totalJellyBeansLeft);
-  moveCameraToGroup(jellyBeanSims[0], 0, -2.35, 1.4, 1.1);
+  moveCameraToGroup(jellyBeanSims[0], 0, -2.35619, 1.4, 1.1);
 }
 
 function onHighlightCategory(e) {
@@ -427,7 +421,7 @@ function onCategorySelected(e) {
   var group = jellyBeanSims[e.detail.index];
   if (group) {
     if (e.detail.index == 0) {
-      moveCameraToGroup(group, 0, -2.35, 1.4, 1.1);
+      moveCameraToGroup(group, 0, -2.35619, 1.4, 1.1);
     } else {
       moveCameraToGroup(group, e.detail.index, group.position[3]);
     }
@@ -435,7 +429,6 @@ function onCategorySelected(e) {
 }
 
 function onDataLoaded(e) {
-  console.log("days: " + e.detail.days);
   document.getElementById("text-container").style.display = "none";
   document.getElementById("categories").style.opacity = 1;
   setTimeout(
@@ -472,7 +465,9 @@ function setupInputs() {
       controls.enableZoom = true;
       controls.enablePan = true;
     }
-    //paused = !paused;
+    if (e.key == "p") {
+      paused = !paused;
+    }
   };
 
   document.addEventListener("keydown", onKeyDown);

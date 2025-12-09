@@ -13,6 +13,7 @@ const TextCard = (props) => {
     setUserParams,
     days,
     loaded,
+    isMobile,
   } = props;
 
   const [showDisclaimer, setShowDisclaimer] = useState(false);
@@ -64,11 +65,14 @@ const TextCard = (props) => {
             long={card.long}
           />
         )}
-
+        {card.mobile && isMobile && (
+          <div className="mobile-text">{card.mobile}</div>
+        )}
+        {card.subtext && <div className="subtext">{card.subtext}</div>}
         {card.button && !card.input && (
           <div id="button-container">
             <button
-              className={"button " + (loaded ? "" : " disabled")}
+              className={"button " + (loaded && !isMobile ? "" : " disabled")}
               disabled={!loaded}
               id="next-button"
               onClick={onButtonClicked}

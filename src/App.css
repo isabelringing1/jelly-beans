@@ -259,20 +259,26 @@ input[type="number"] {
 #column-2 {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-between;
   z-index: 3;
 }
 
 .column-2-text {
-  font-size: 2.3vh;
-  padding-top: 3vh;
+  font-size: 2.1vh;
   text-align: center;
   color: rgba(0, 0, 0, 0.816);
 }
 
+.top-text {
+  padding-top: 3vh;
+}
+
+.bottom-text {
+  padding-bottom: 12vh;
+}
+
 .column-error {
   font-size: 2.3vh;
-  margin-top: 41vh;
   text-align: center;
   color: rgba(255, 0, 0);
   background: rgba(255, 255, 255, 0.7);
@@ -421,6 +427,13 @@ input[type="number"] {
 
 .disclaimer:hover {
   color: rgba(0, 0, 0, 0.715);
+}
+
+.subtext {
+  font-size: 1.8vh;
+  color: rgba(0, 0, 0, 0.55);
+  width: 80%;
+  text-align: center;
 }
 
 .prompt-error {
@@ -575,7 +588,7 @@ input[type="number"] {
 }
 
 #modal {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 5vh;
   pointer-events: all;
   width: 44vh;
@@ -600,7 +613,6 @@ input[type="number"] {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2vh 0;
 }
 
 .modal-text {
@@ -698,4 +710,27 @@ a:hover {
   height: 1em;
   vertical-align: text-top;
   opacity: 0.9;
+}
+
+.lil-gui {
+  display: none !important; /* disable to show gui */
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  #text-container {
+    padding: 0;
+  }
+
+  .card {
+    width: 85vw;
+  }
+}
+
+.mobile-text {
+  color: red;
+  font-size: 1.8vh;
+  width: 90%;
+  text-align: center;
+  padding-bottom: 2vh;
 }

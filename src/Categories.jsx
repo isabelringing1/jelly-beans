@@ -56,17 +56,19 @@ const Categories = (props) => {
         ;
       </div>
       <div className="column" id="column-2">
-        {showHelper && (
-          <div className="column-2-text">
-            Click on each section to enter data.
-          </div>
-        )}
-
+        <div
+          className={"column-2-text top-text " + (showHelper ? "" : "hidden")}
+        >
+          Click on each section to enter data.
+        </div>
         {showError && (
           <div className="column-error">
             Not enough Jelly Beans! Check your data.
           </div>
         )}
+        <div className="column-2-text bottom-text">
+          Each jelly bean represents a day in the rest of your life.
+        </div>
 
         <div className="banana-switch">
           Banana for Scale

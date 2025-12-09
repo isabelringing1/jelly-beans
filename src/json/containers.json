@@ -3,7 +3,7 @@
     "jar": {
       "id": "jar",
       "radius": 3.0,
-      "subtract": 9.0,
+      "subtract": 8.0,
       "scale": [0.043, 0.045, 0.043],
       "yOffset": 0,
       "file": "new_jar2.glb",
@@ -11,7 +11,7 @@
       "min": 6500,
       "bounce": 1.5,
       "restDensity": 0.55,
-      "labelYOffset": -1,
+      "labelYOffset": -0.9,
       "bananaPosOffset": [-0.27, 0.12, 0.27]
     },
     "fish_bowl": {
@@ -35,7 +35,7 @@
       "max": 3000,
       "min": 1800,
       "scale": [0.008, 0.008, 0.008],
-      "yOffset": 0.2,
+      "yOffset": 0.18,
       "file": "pedestal_bowl.glb",
       "bounce": 3,
       "restDensity": 0.5,

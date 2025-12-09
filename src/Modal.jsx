@@ -14,10 +14,9 @@ const Modal = (props) => {
     if (modalMode == "info") {
       setTitle("About");
       setText([
-        "Data for calculating life expectancy is from the CDC's [National Vital Statistics Reports](https://www.ncbi.nlm.nih.gov/books/NBK614547/), based on death rates in 2022.",
-        "This means data is unfortunately biased towards the United States. Any suggestions for sources of recent, global life table data are welcome.",
-        "This project was inspired by [All The Ghosts You Will Be](https://www.youtube.com/watch?v=xHd4zsIbXJ0) by Vsauce. Its name is a homage to Wait But Why's [Your Life in Weeks](https://waitbutwhy.com/2014/05/life-weeks.html).",
-        "Made by [Isabel Lee](https://isabellee.me).",
+        "This project uses data from the CDC's [National Vital Statistics Reports](https://www.ncbi.nlm.nih.gov/books/NBK614547/) for calculating life expectancy, based on death rates in 2022. This has the unfortunate effect of biasing results towards the United States population.",
+        "Inspired by [All The Ghosts You Will Be](https://www.youtube.com/watch?v=xHd4zsIbXJ0) by Vsauce, and named as a homage to Wait But Why's [Your Life in Weeks](https://waitbutwhy.com/2014/05/life-weeks.html).",
+        "Jelly beans may occasionally freak out from time to time. Consider it a metaphor.",
       ]);
       setButtons(["CLOSE"]);
       setActions([closeModal]);

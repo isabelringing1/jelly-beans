@@ -17,6 +17,8 @@ const TextContainer = (props) => {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   var isAnimating = useRef(false);
 
+  const isMobile = window.innerWidth <= 600;
+
   useEffect(() => {
     var sequence = instructions["start"];
     setCurrentSequence(sequence);
@@ -44,7 +46,7 @@ const TextContainer = (props) => {
   };
 
   const onButtonClicked = () => {
-    if (isAnimating.current) {
+    if (isAnimating.current || isMobile) {
       return;
     }
     processCard();
@@ -121,6 +123,7 @@ const TextContainer = (props) => {
               setUserParams={setUserParams}
               days={days}
               loaded={loaded}
+              isMobile={isMobile}
             />
           );
         })}

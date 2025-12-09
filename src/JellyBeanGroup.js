@@ -1,6 +1,8 @@
 import * as THREE from "three/webgpu";
 import * as TSL from "three/tsl";
 import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
+import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+const gui = new GUI();
 
 const maxParticles = 23750;
 const defaultGridSize1d = 70;
@@ -80,7 +82,7 @@ class JellyBeanGroup {
   setupUniforms(params, container, pos) {
     this.gridSizeUniform = TSL.uniform(this.gridSize);
     this.particleCountUniform = TSL.uniform(params.particleCount, "uint");
-    this.stiffnessUniform = TSL.uniform(1000);
+    this.stiffnessUniform = TSL.uniform(800);
     this.restDensityUniform = TSL.uniform(container.restDensity); // default 0.65
     this.dynamicViscosityUniform = TSL.uniform(5);
     this.dtUniform = TSL.uniform(1 / 60);
@@ -96,6 +98,35 @@ class JellyBeanGroup {
     this.innerRadiusUniform = TSL.uniform(container.radius);
     this.subtractionUniform = TSL.uniform(container.subtract);
     this.bounceUniform = TSL.uniform(container.bounce);
+
+    gui.add(params, "particleCount", -100, 100, 5).onChange((value) => {
+      this.setParticleCount(value);
+    });
+
+    gui
+      .add(this.dynamicViscosityUniform, "value", -100, 100, 5)
+      .name("dynamic viscocity");
+
+    gui
+      .add(this.restDensityUniform, "value", 0, 1, container.restDensity)
+      .name("restDensity")
+      .step(0.05);
+
+    gui.add(this.dtUniform, "value", -100, 100, 1 / 60).name("dtUniform");
+    gui
+      .add(this.stiffnessUniform, "value", 0, 10000, 800)
+      .name("stiffness")
+      .step(1);
+
+    gui
+      .add(this.bounceUniform, "value", -10, 10, container.bounce)
+      .name("bounce")
+      .step(1);
+
+    gui
+      .add(this.subtractionUniform, "value", -10, 100, container.subtract)
+      .name("subtract")
+      .step(1);
   }
 
   setupComputeShaders(params) {
