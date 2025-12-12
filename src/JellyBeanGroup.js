@@ -31,6 +31,7 @@ class JellyBeanGroup {
     this.clock = new THREE.Clock();
     this.position = pos;
     this.container = container;
+    this.paused = false;
     this.setupBuffers();
     this.setupUniforms(params, container, pos);
     this.setupComputeShaders(params);
@@ -83,7 +84,19 @@ class JellyBeanGroup {
     this.gridSizeUniform = TSL.uniform(this.gridSize);
     this.particleCountUniform = TSL.uniform(params.particleCount, "uint");
     this.stiffnessUniform = TSL.uniform(800);
-    this.restDensityUniform = TSL.uniform(container.restDensity); // default 0.65
+    console.log(container);
+    if (container.id == "jar") {
+      // derived from 2000 beans ~ 0.4 and 24000 ~ 0.6
+      this.restDensityUniform = TSL.uniform(
+        0.0000090909 * params.particleCount + 0.3818182
+      );
+      console.log(
+        "calculated rest density to " + this.restDensityUniform.value
+      );
+    } else {
+      this.restDensityUniform = TSL.uniform(container.restDensity); // default 0.65
+    }
+
     this.dynamicViscosityUniform = TSL.uniform(5);
     this.dtUniform = TSL.uniform(1 / 60);
     this.gravityUniform = TSL.uniform(
@@ -687,7 +700,7 @@ class JellyBeanGroup {
     return this.tslColors.element(seed);
   });
 
-  renderFunction = async (renderer, paused) => {
+  renderFunction = async (renderer, overridePaused) => {
     const deltaTime = THREE.MathUtils.clamp(
       this.clock.getDelta(),
       0.00001,
@@ -695,7 +708,15 @@ class JellyBeanGroup {
     ); // don't advance the time too far, for example when the window is out of focus
     this.dtUniform.value = deltaTime;
 
-    if (!paused) {
+    if (
+      this.index == 0 &&
+      this.fallIndexUniform.value >= this.particleCountUniform.value + 5000 &&
+      !this.animatingChange
+    ) {
+      this.paused = true;
+    }
+
+    if (!overridePaused && !this.paused) {
       await renderer.computeAsync([
         this.clearGridKernel,
         this.p2g1Kernel,
@@ -704,7 +725,7 @@ class JellyBeanGroup {
         this.g2pKernel,
       ]);
     }
-    if (this.fallIndexUniform.value < this.particleCountUniform.value) {
+    if (this.fallIndexUniform.value < this.particleCountUniform.value + 5500) {
       this.fallIndexUniform.value = this.fallIndexUniform.value + 60;
     }
   };
@@ -719,6 +740,17 @@ class JellyBeanGroup {
     this.particleMesh.count = value;
     this.particleCountUniform.value = value;
     this.yOffsetUniformPc.value = value * -0.000003158 + 0.0526316;
+
+    console.log(this.index);
+    if (this.index == 0) {
+      //main jar
+      this.paused = false;
+      this.animatingChange = true;
+      setTimeout(() => {
+        this.paused = true;
+        this.animatingChange = false;
+      }, 5000);
+    }
   }
 
   getParticleCount() {

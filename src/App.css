@@ -64,7 +64,7 @@ canvas {
   pointer-events: all;
   width: 45vh;
   padding: 4vh 2vh 5vh 2vh;
-  backdrop-filter: blur(1px);
+  backdrop-filter: blur(3px);
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 2vh;
   display: flex;
@@ -473,6 +473,7 @@ input[type="number"] {
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 2vh;
   transform: opacity 0.2 ease-in-out;
+  backdrop-filter: blur(2px);
 }
 
 .label-hover {

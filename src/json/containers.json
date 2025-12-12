@@ -3,7 +3,7 @@
     "jar": {
       "id": "jar",
       "radius": 3.0,
-      "subtract": 8.0,
+      "subtract": 9.0,
       "scale": [0.043, 0.045, 0.043],
       "yOffset": 0,
       "file": "new_jar2.glb",
