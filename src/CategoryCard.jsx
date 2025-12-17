@@ -130,6 +130,7 @@ const CategoryCard = (props) => {
         var cn = e.target.className;
         if (
           !cn.includes("prompt-text") &&
+          !cn.includes("prompt-option") &&
           !e.target.closest(".prompt-input-div")
         ) {
           categoryCardClicked();
