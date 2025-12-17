@@ -710,7 +710,7 @@ class JellyBeanGroup {
 
     if (
       this.index == 0 &&
-      this.fallIndexUniform.value >= this.particleCountUniform.value + 5000 &&
+      this.fallIndexUniform.value >= this.particleCountUniform.value + 6000 &&
       !this.animatingChange
     ) {
       this.paused = true;
@@ -725,7 +725,7 @@ class JellyBeanGroup {
         this.g2pKernel,
       ]);
     }
-    if (this.fallIndexUniform.value < this.particleCountUniform.value + 5500) {
+    if (this.fallIndexUniform.value < this.particleCountUniform.value + 6500) {
       this.fallIndexUniform.value = this.fallIndexUniform.value + 60;
     }
   };
