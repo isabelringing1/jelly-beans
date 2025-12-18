@@ -726,6 +726,103 @@ a:hover {
   .card {
     width: 85vw;
   }
+
+  #categories-mobile {
+    position: absolute;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 1s ease-in-out;
+    z-index: 1;
+  }
+
+  .categories-mobile-text {
+    font-size: 2vh;
+    text-align: center;
+    padding: 2.5vh 4vw;
+  }
+
+  .category-cards-mobile {
+    overflow-y: scroll;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100vw;
+    height: 84vh;
+    margin-top: 7vh;
+    transition: opacity 1s ease-in-out;
+    pointer-events: all;
+  }
+
+  .category-card {
+    width: 80vw;
+    margin: 1vh 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    pointer-events: inherit;
+  }
+
+  .prompt-input {
+    width: 16vw;
+  }
+
+  .categories-mobile-x {
+    color: red;
+    font-size: 10vh;
+    position: absolute;
+    padding: 0vh 4vw;
+    z-index: 10;
+    margin-top: -3vh;
+    cursor: pointer;
+    pointer-events: all;
+    transition: opacity 1s ease-in-out;
+  }
+
+  .input-data-button {
+    position: absolute;
+    margin-top: 7vh;
+    margin-left: 30vw;
+    height: 6vh;
+    font-size: 2vh;
+    width: 45vw;
+    transition: opacity 1s ease-in-out;
+    pointer-events: all;
+    z-index: 10;
+  }
+
+  .input-data-button:active:not(.disabled) {
+    margin-top: 7.3vh;
+    filter: none;
+  }
+
+  .column-buttons-mobile {
+    position: absolute;
+    bottom: 2vh;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+  }
+
+  .column-button {
+    margin-bottom: 1vh;
+  }
+
+  .info-button {
+    position: relative;
+    bottom: 0;
+    right: 0;
+  }
+
+  #modal {
+    width: 75%;
+  }
+
+  .card.hidden {
+    pointer-events: none;
+  }
 }
 
 .mobile-text {

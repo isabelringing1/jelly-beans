@@ -65,14 +65,11 @@ const TextCard = (props) => {
             long={card.long}
           />
         )}
-        {card.mobile && isMobile && (
-          <div className="mobile-text">{card.mobile}</div>
-        )}
         {card.subtext && <div className="subtext">{card.subtext}</div>}
         {card.button && !card.input && (
           <div id="button-container">
             <button
-              className={"button " + (loaded && !isMobile ? "" : " disabled")}
+              className={"button " + (loaded ? "" : " disabled")}
               disabled={!loaded}
               id="next-button"
               onClick={onButtonClicked}

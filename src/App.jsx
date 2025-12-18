@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TextContainer from "./TextContainer.jsx";
 import Categories from "./Categories.jsx";
+import CategoriesMobile from "./CategoriesMobile.jsx";
 import ContainerLabels from "./ContainerLabels.jsx";
 import { initializeLifeTables } from "./util/TimeCalculator.js";
 import flower from "/flower.png";
@@ -12,6 +13,8 @@ const App = () => {
   const [days, setDays] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+
+  const isMobile = window.innerWidth <= 600;
 
   useEffect(() => {
     loadData();
@@ -77,12 +80,21 @@ const App = () => {
         setDays={setDays}
         loaded={loaded}
         showWarning={showWarning}
+        isMobile={isMobile}
       />
       <ContainerLabels wildcardCategory={wildcardCategory} />
-      <Categories
-        show={showCategories}
-        setWildcardCategory={setWildcardCategory}
-      />
+      {isMobile ? (
+        <CategoriesMobile
+          show={showCategories}
+          setWildcardCategory={setWildcardCategory}
+        />
+      ) : (
+        <Categories
+          show={showCategories}
+          setWildcardCategory={setWildcardCategory}
+        />
+      )}
+
       {showWarning && (
         <div className="warning-container">
           <div className="warning">

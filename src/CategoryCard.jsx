@@ -9,6 +9,8 @@ const CategoryCard = (props) => {
     selected,
     setSelectedCardIndex,
     setWildcardCategory,
+    isMobile,
+    onDonePressed,
   } = props;
   const [opened, setOpened] = useState(false);
   const [started, setStarted] = useState(false);
@@ -90,6 +92,9 @@ const CategoryCard = (props) => {
         },
       })
     );
+    if (onDonePressed) {
+      onDonePressed();
+    }
   };
 
   const calculatePercent = () => {

@@ -23,6 +23,8 @@ var totalJellyBeansLeft = 0;
 var manager = null;
 var gltfLoader = null;
 
+const isMobile = window.innerWidth <= 600;
+
 if (WebGPU.isAvailable() === false) {
   document.body.appendChild(WebGPU.getErrorMessage());
   throw new Error("No WebGPU support");
@@ -53,7 +55,8 @@ async function init() {
     0.01,
     10
   );
-  camera.position.set(-1.5, 0.75, -1.5);
+  var z = isMobile ? -4 : -1.5;
+  camera.position.set(-1.5, 0.75, z);
 
   controls = new OrbitControls(camera, renderer.domElement);
   //controls.enableZoom = false;
@@ -138,8 +141,9 @@ function animateCameraZoom() {
     z: camera.position.z,
   };
   controls.enabled = false;
+  var newZ = isMobile ? -2 : -0.9;
   new TWEEN.Tween(coords)
-    .to({ x: -0.9, y: 0.6, z: -0.9 }, 2000)
+    .to({ x: -0.9, y: 0.6, z: newZ }, 2000)
     .onUpdate(() => camera.position.set(coords.x, coords.y, coords.z))
     .easing(TWEEN.Easing.Quadratic.InOut)
     .delay(800)
@@ -169,6 +173,9 @@ function moveCameraToGroup(
   var spherical = new THREE.Spherical();
   var currAzimuth = controls.getAzimuthalAngle();
   var r = radius == -1 ? 1.5 : radius;
+  if (isMobile) {
+    r *= 1;
+  }
   var p = polarAngle == -1 ? 0.85 : polarAngle;
 
   var distance = Math.abs(currAzimuth - azimuth);
@@ -430,7 +437,11 @@ function onCategorySelected(e) {
 
 function onDataLoaded(e) {
   document.getElementById("text-container").style.display = "none";
-  document.getElementById("categories").style.opacity = 1;
+  var categories = document.getElementById("categories");
+  if (categories == null) {
+    categories = document.getElementById("categories-mobile");
+  }
+  categories.style.opacity = 1;
   setTimeout(
     () => (document.getElementById("container-label-0").style.opacity = 1),
     1500

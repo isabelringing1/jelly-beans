@@ -12,12 +12,11 @@ const TextContainer = (props) => {
     days,
     setDays,
     loaded,
+    isMobile,
   } = props;
   const [currentSequence, setCurrentSequence] = useState([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   var isAnimating = useRef(false);
-
-  const isMobile = window.innerWidth <= 600;
 
   useEffect(() => {
     var sequence = instructions["start"];
@@ -46,9 +45,10 @@ const TextContainer = (props) => {
   };
 
   const onButtonClicked = () => {
-    if (isAnimating.current || isMobile) {
+    if (isAnimating.current) {
       return;
     }
+    console.log("processing");
     processCard();
   };
 
