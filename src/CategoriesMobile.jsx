@@ -41,7 +41,6 @@ const CategoriesMobile = (props) => {
   };
 
   const onCardDonePressed = () => {
-    console.log("done pressed");
     setShowCards(false);
   };
 
@@ -89,14 +88,20 @@ const CategoriesMobile = (props) => {
           setShowCards(true);
         }}
       >
-        INPUT DATA
+        SEE CATEGORIES
       </button>
 
       {!showCards && (
-        <div className="column-buttons-mobile">
+        <div
+          className="column-buttons-mobile"
+          style={{ pointerEvents: show ? "auto" : "none" }}
+        >
           <div
             className="column-button"
             onClick={() => {
+              if (!show) {
+                return;
+              }
               setModalMode("confirm-reset");
             }}
           >
@@ -106,6 +111,9 @@ const CategoriesMobile = (props) => {
           <div
             className="column-button"
             onClick={() => {
+              if (!show) {
+                return;
+              }
               setModalMode("start-over");
             }}
           >

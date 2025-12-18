@@ -107,7 +107,6 @@ const TextContainer = (props) => {
       onWheel={onScroll}
       style={{
         top: -100 * currentCardIndex + "vh",
-        pointerEvents: loaded ? "auto" : "none",
       }}
     >
       {currentSequence.cards &&

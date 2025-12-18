@@ -4,6 +4,7 @@ body {
   margin: 0;
   font-family: "DM Sans", sans-serif;
   overflow: hidden;
+  background-color: #92efff !important;
 }
 
 @font-face {
@@ -41,7 +42,7 @@ canvas {
   position: absolute;
   top: 0;
   transition: top 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-  pointer-events: all;
+  pointer-events: none;
   z-index: 1;
 }
 
@@ -680,7 +681,7 @@ a:hover {
   margin-left: 4vh;
   padding: 2vh;
   border-radius: 2vh;
-  background-color: rgba(175, 243, 255, 1);
+  background-color: rgb(255 255 255);
   text-align: center;
 }
 
@@ -721,6 +722,7 @@ a:hover {
 @media (max-width: 600px) {
   body {
     min-height: 100svh; /* iOS-safe */
+    position: fixed;
   }
 
   #text-container {
@@ -787,10 +789,10 @@ a:hover {
   .input-data-button {
     position: absolute;
     margin-top: 7vh;
-    margin-left: 30vw;
+    margin-left: 25vw;
     height: 6vh;
     font-size: 2vh;
-    width: 45vw;
+    width: 55vw;
     transition: opacity 1s ease-in-out;
     pointer-events: all;
     z-index: 10;
@@ -826,6 +828,18 @@ a:hover {
 
   .card.hidden {
     pointer-events: none;
+  }
+
+  .column-error {
+    margin-top: 40vh;
+    z-index: 10;
+    width: 80vw;
+    margin-left: 10vw;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .warning {
+    margin-left: 0;
   }
 }
 
