@@ -6,7 +6,7 @@
         "subtitle": "An interactive exploration about candy and the rest of your days.",
         "button": "START",
         "subtext": "by Isabel Lee",
-        "mobile": "This experience does not work on this screen size right now, sorry! Please revist on desktop."
+        "mobile": "NOTE: WebGPU may behave unpredictably on mobile platforms. Play on desktop for the best experience."
       },
       {
         "texts": [
