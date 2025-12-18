@@ -28,8 +28,8 @@ canvas {
 }
 
 #content {
-  width: 100%;
-  height: 100%;
+  width: 100dvw;
+  height: 100dvh;
 }
 
 #text-container {
@@ -736,8 +736,8 @@ a:hover {
   #categories-mobile {
     position: absolute;
     margin: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100dvw;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     transition: opacity 1s ease-in-out;
@@ -788,7 +788,7 @@ a:hover {
 
   .input-data-button {
     position: absolute;
-    margin-top: 7vh;
+    margin-top: 10vh;
     margin-left: 25vw;
     height: 6vh;
     font-size: 2vh;
@@ -799,7 +799,7 @@ a:hover {
   }
 
   .input-data-button:active:not(.disabled) {
-    margin-top: 7.3vh;
+    margin-top: 10.3vh;
     filter: none;
   }
 
@@ -840,6 +840,16 @@ a:hover {
 
   .warning {
     margin-left: 0;
+  }
+
+  .banana-switch {
+    position: initial;
+    padding-right: 3vw;
+  }
+
+  .banana-disclaimer {
+    position: initial;
+    padding-right: 5vw;
   }
 }
 

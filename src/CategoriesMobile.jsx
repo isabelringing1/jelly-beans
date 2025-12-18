@@ -14,6 +14,7 @@ const CategoriesMobile = (props) => {
   const [selectedCardIndex, setSelectedCardIndex] = useState(-1);
   const [modalMode, setModalMode] = useState("none"); // none, info
   const [showError, setShowError] = useState(false);
+  const [bananaChecked, setBananaChecked] = useState(false);
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -47,12 +48,10 @@ const CategoriesMobile = (props) => {
   return (
     <div id="categories-mobile" className={cn}>
       <Modal modalMode={modalMode} setModalMode={setModalMode} />
-      <div
-        className={
-          "categories-mobile-text " + (showHelper && showCards ? "" : "hidden")
-        }
-      >
-        Open a category to enter data.
+      <div className={"categories-mobile-text "}>
+        {showCards
+          ? " Open a category to enter data."
+          : "Each jelly bean represents a day in the rest of your life."}
       </div>
       {showError && (
         <div className="column-error">
@@ -96,6 +95,22 @@ const CategoriesMobile = (props) => {
           className="column-buttons-mobile"
           style={{ pointerEvents: show ? "auto" : "none" }}
         >
+          {bananaChecked && (
+            <div className="banana-disclaimer">
+              *Banana is a rough estimation!
+            </div>
+          )}
+          <div className="banana-switch">
+            Banana for Scale
+            <Switch
+              checked={bananaChecked}
+              onChange={() => {
+                setBananaChecked(!bananaChecked);
+                document.dispatchEvent(new CustomEvent("toggle-banana"));
+              }}
+            />
+          </div>
+
           <div
             className="column-button"
             onClick={() => {
