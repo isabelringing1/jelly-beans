@@ -7,6 +7,7 @@ const gui = new GUI();
 const maxParticles = 23750;
 const defaultGridSize1d = 70;
 const fixedPointMultiplier = 1e7;
+const isMobile = window.innerWidth <= 600;
 
 let colors = [
   new THREE.Color("rgb(241, 224, 0)"),
@@ -707,10 +708,10 @@ class JellyBeanGroup {
       1 / 60
     ); // don't advance the time too far, for example when the window is out of focus
     this.dtUniform.value = deltaTime;
-
+    var offset = isMobile ? 10000 : 6000;
     if (
       this.index == 0 &&
-      this.fallIndexUniform.value >= this.particleCountUniform.value + 6000 &&
+      this.fallIndexUniform.value >= this.particleCountUniform.value + offset &&
       !this.animatingChange
     ) {
       this.paused = true;
@@ -725,7 +726,11 @@ class JellyBeanGroup {
         this.g2pKernel,
       ]);
     }
-    if (this.fallIndexUniform.value < this.particleCountUniform.value + 6500) {
+
+    if (
+      this.fallIndexUniform.value <
+      this.particleCountUniform.value + offset + 500
+    ) {
       this.fallIndexUniform.value = this.fallIndexUniform.value + 60;
     }
   };
@@ -746,10 +751,11 @@ class JellyBeanGroup {
       //main jar
       this.paused = false;
       this.animatingChange = true;
+      var timeout = isMobile ? 10000 : 6000;
       setTimeout(() => {
         this.paused = true;
         this.animatingChange = false;
-      }, 5000);
+      }, timeout);
     }
   }
 

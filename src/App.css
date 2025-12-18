@@ -1,6 +1,6 @@
 body {
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   margin: 0;
   font-family: "DM Sans", sans-serif;
   overflow: hidden;
@@ -719,6 +719,12 @@ a:hover {
 
 /* Mobile */
 @media (max-width: 600px) {
+  #react-root {
+    height: 100svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   #text-container {
     padding: 0;
   }
