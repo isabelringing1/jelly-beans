@@ -860,3 +860,11 @@ a:hover {
   text-align: center;
   padding-bottom: 2vh;
 }
+
+.subtext-link {
+  color: #b45eff;
+}
+
+.subtext-link:hover {
+  color: #933dde;
+}

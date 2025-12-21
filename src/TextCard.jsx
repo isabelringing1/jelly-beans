@@ -68,7 +68,18 @@ const TextCard = (props) => {
         {card.mobile && isMobile && (
           <div className="mobile-text">{card.mobile}</div>
         )}
-        {card.subtext && <div className="subtext">{card.subtext}</div>}
+        {card.subtext && (
+          <div className="subtext">
+            by{" "}
+            <a
+              className="subtext-link"
+              href="https://isabisabel.com"
+              target="_blank"
+            >
+              Isabel Lee
+            </a>
+          </div>
+        )}
         {card.button && !card.input && (
           <div id="button-container">
             <button

@@ -88,9 +88,7 @@ class JellyBeanGroup {
     console.log(container);
     if (container.id == "jar") {
       // derived from 2000 beans ~ 0.4 and 24000 ~ 0.6
-      this.restDensityUniform = TSL.uniform(
-        0.0000090909 * params.particleCount + 0.3818182
-      );
+      this.restDensityUniform = TSL.uniform(container.restDensity);
       console.log(
         "calculated rest density to " + this.restDensityUniform.value
       );

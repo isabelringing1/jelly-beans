@@ -590,7 +590,6 @@ async function render() {
       detail: { data: containerData },
     })
   );
-  //console.log(controls.getAzimuthalAngle());
 
   await renderer.renderAsync(scene, camera);
 }

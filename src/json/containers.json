@@ -10,7 +10,7 @@
       "max": 10000000000,
       "min": 6500,
       "bounce": 1.5,
-      "restDensity": 0.55,
+      "restDensity": 0.65,
       "labelYOffset": -0.9,
       "bananaPosOffset": [-0.27, 0.12, 0.27]
     },
