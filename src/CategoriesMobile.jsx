@@ -114,9 +114,6 @@ const CategoriesMobile = (props) => {
           <div
             className="column-button"
             onClick={() => {
-              if (!show) {
-                return;
-              }
               setModalMode("confirm-reset");
             }}
           >
@@ -126,9 +123,6 @@ const CategoriesMobile = (props) => {
           <div
             className="column-button"
             onClick={() => {
-              if (!show) {
-                return;
-              }
               setModalMode("start-over");
             }}
           >
