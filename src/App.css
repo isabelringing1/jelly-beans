@@ -838,6 +838,40 @@ a:hover {
     background: rgba(255, 255, 255, 0.9);
   }
 
+  #column-info {
+    margin-top: 40vh;
+    z-index: 10;
+    width: 80vw;
+    margin-left: 10vw;
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 2.3vh;
+    text-align: center;
+    border-radius: 2vh;
+    color: rgba(0, 0, 0, 0.713);
+    padding: 1vh;
+
+    opacity: 0;
+  }
+
+  .slow-show {
+    animation: slow-show 5s ease-in-out;
+  }
+
+  @keyframes slow-show {
+    0% {
+      opacity: 0;
+    }
+    20% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
   .warning {
     margin-left: 0;
   }

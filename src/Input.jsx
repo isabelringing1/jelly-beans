@@ -43,7 +43,6 @@ const Input = (props) => {
     var newUserParams = { ...userParams };
     setStarted(true);
     if (id == "birth-date") {
-      console.log(e.target.id, e.nativeEvent.inputTpe);
       newUserParams["month"] = monthRef.current.value;
       if (
         monthRef.current.value.length == 2 &&

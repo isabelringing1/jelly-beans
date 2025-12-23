@@ -85,13 +85,9 @@ class JellyBeanGroup {
     this.gridSizeUniform = TSL.uniform(this.gridSize);
     this.particleCountUniform = TSL.uniform(params.particleCount, "uint");
     this.stiffnessUniform = TSL.uniform(800);
-    console.log(container);
     if (container.id == "jar") {
       // derived from 2000 beans ~ 0.4 and 24000 ~ 0.6
       this.restDensityUniform = TSL.uniform(container.restDensity);
-      console.log(
-        "calculated rest density to " + this.restDensityUniform.value
-      );
     } else {
       this.restDensityUniform = TSL.uniform(container.restDensity); // default 0.65
     }
@@ -744,7 +740,6 @@ class JellyBeanGroup {
     this.particleCountUniform.value = value;
     this.yOffsetUniformPc.value = value * -0.000003158 + 0.0526316;
 
-    console.log(this.index);
     if (this.index == 0) {
       //main jar
       this.paused = false;

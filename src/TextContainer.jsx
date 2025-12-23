@@ -48,7 +48,6 @@ const TextContainer = (props) => {
     if (isAnimating.current) {
       return;
     }
-    console.log("processing");
     processCard();
   };
 

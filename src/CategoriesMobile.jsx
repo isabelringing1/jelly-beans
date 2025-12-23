@@ -15,6 +15,7 @@ const CategoriesMobile = (props) => {
   const [modalMode, setModalMode] = useState("none"); // none, info
   const [showError, setShowError] = useState(false);
   const [bananaChecked, setBananaChecked] = useState(false);
+  const [hasShownInfo, setHasShownInfo] = useState(false);
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -26,7 +27,6 @@ const CategoriesMobile = (props) => {
   }, []);
 
   var cats = [...categories["column-1"], ...categories["column-3"]];
-  console.log(cats);
 
   useEffect(() => {
     document.addEventListener("overboard", () => {
@@ -43,6 +43,10 @@ const CategoriesMobile = (props) => {
 
   const onCardDonePressed = () => {
     setShowCards(false);
+    if (!hasShownInfo) {
+      document.getElementById("column-info").classList.add("slow-show");
+      setHasShownInfo(true);
+    }
   };
 
   return (
@@ -58,6 +62,8 @@ const CategoriesMobile = (props) => {
           Not enough Jelly Beans! Check your data.
         </div>
       )}
+
+      <div id="column-info">Use two fingers to pan and zoom.</div>
       <div
         className={"categories-mobile-x " + (showCards ? "" : "hidden")}
         onClick={() => setShowCards(false)}
